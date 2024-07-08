@@ -1,0 +1,11 @@
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+const SUPABASE_PROJECT_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+const supabase: SupabaseClient = createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+
+export default supabase;
+
+NEXT_PUBLIC_SUPABASE_URL="https://blthjtndgzdzyqcvkdmm.supabase.co" 
+NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdGhqdG5kZ3pkenlxY3ZrZG1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA0MzM0MTgsImV4cCI6MjAzNjAwOTQxOH0.zztpiBAqfGIL0u5nU7bHaRlwEXn4-gJ3OoNptH_nOIg"
