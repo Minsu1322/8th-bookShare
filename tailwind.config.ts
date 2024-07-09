@@ -14,7 +14,11 @@ module.exports = {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
       },
       colors: {
-        main: '#AF5858'
+        main: '#AF5858',
+        primary: {
+          DEFAULT: '#000000'
+        },
+        background: '#ffffff' // 적용 안 됨
       }
     }
   },
