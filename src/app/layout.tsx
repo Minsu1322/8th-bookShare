@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { NextUIProvider } from '@nextui-org/react';
-import QureyProvider from './provider';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import TopButton from '@/components/TopButton';
+import QueryProvider from './provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,9 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QureyProvider>
-          <NextUIProvider>{children}</NextUIProvider>
-        </QureyProvider>
+        <QueryProvider>
+          <NextUIProvider>
+            <Header />
+            {children}
+            <TopButton />
+            <Footer />
+          </NextUIProvider>
+        </QueryProvider>
       </body>
     </html>
   );
