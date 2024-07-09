@@ -1,9 +1,17 @@
 import { createClient } from '@/utils/supabase/server';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export const POST = async (request: NextApiRequest, response: NextApiResponse) => {
+interface CommentData {
+  title: string;
+  content: string;
+  post_id: string;
+}
+
+export const POST = async (request: NextRequest, response: NextResponse) => {
   const supabase = createClient();
-  const { title, content, post_id } = request.body;
+  const requestBody = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
+
+  const { title, content, post_id }: CommentData = requestBody;
 
   const { data, error } = await supabase.from('comments').insert({ title, content, post_id });
   console.log(data);
