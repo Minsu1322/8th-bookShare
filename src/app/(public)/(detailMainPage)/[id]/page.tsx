@@ -44,8 +44,8 @@ const MainDetail = ({ params }: { params: { id: string } }) => {
           </div>
 
           {/* 우측 책 정보 */}
-          <div className="w-2/3 pl-4 flex flex-col justify-between">
-            <div className="flex-grow flex flex-col space-y-16">
+          <div className="w-2/3 pl-4 py-3 text-lg flex flex-col justify-between">
+            <div className="flex-grow flex flex-col space-y-16 ml-4">
               <h1 className="text-3xl font-bold mb-2">{items.title}</h1>
               <p className="text-lg mb-1">{items.author}</p>
               <p className="text-md text-gray-600 mb-1 font-semibold">
@@ -71,6 +71,7 @@ const MainDetail = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </div>
+        <div className="border-2 border-orange-500 border-dashed min-h-72	h-auto w-auto">d</div>
       </div>
       <Comment />
     </>
