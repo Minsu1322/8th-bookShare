@@ -1,7 +1,6 @@
 'use client';
 import Comment from '@/components/comment/Comment';
 import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
 
 const fetchAladinDetailPage = async (isbn13: string) => {
   const apiUrl = 'http://localhost:3000';
