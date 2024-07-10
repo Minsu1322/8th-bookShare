@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface CommentData {
@@ -7,14 +7,24 @@ interface CommentData {
   post_id: string;
 }
 
-export const POST = async (request: NextRequest, response: NextResponse) => {
+export const POST = async (request: NextRequest) => {
   const supabase = createClient();
-  const requestBody = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
 
-  const { title, content, post_id }: CommentData = requestBody;
+  const response = await request.json();
+  console.log(response);
+
+  // const requestBody = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
+
+  // console.log('-------------------------------');
+  // console.log(requestBody);
+  // console.log('--------------------------------');
+
+  const { title, content, post_id }: CommentData = response;
 
   const { data, error } = await supabase.from('comments').insert({ title, content, post_id });
   console.log(data);
+  console.log('----------------------------------------------------------------------');
+  console.log(error);
   //error : response.status is not a function
   //TODO 1 response 자체가 undefinded 반환. 결과값 제대로 받아오기
   //2 response에 status 항목이 있는지 확인
@@ -23,6 +33,8 @@ export const POST = async (request: NextRequest, response: NextResponse) => {
     console.log(error);
     // return response.status(500).json({ error: error.message });
   }
+
+  return NextResponse.json({ status: 'success' });
   // response.status(200).json({ message: '댓글 저장 완료', data });
 };
 // export default async (request: NextApiRequest, response: NextApiResponse) => {
