@@ -1,34 +1,48 @@
 'use client';
-
 import { useParams } from 'next/navigation';
-//TODO 클라이언트 컴포넌트로 둬야하는지 다시 생각
-
+import { useState } from 'react';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 
-type NowUser = {
+export type NowUser = {
   nickname: string;
   user_id: string;
 };
+export type TargetValue = {
+  id?: string;
+  title: string | undefined;
+  content: string | undefined;
+  post_id?: string | string[];
+  writer?: string;
+  created_at?: string;
+};
 
 const Comment = () => {
-  const { id: paramsId } = useParams();
+  const { id: postId } = useParams();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [targetValue, setTargetValue] = useState<TargetValue>({
+    id: '',
+    title: '',
+    content: '',
+    post_id: postId,
+    writer: 'fake_nickname',
+    created_at: ''
+  });
 
   const isLogin: boolean = true;
 
-  const nowUser: NowUser = {
-    nickname: 'nickname',
-    user_id: 'id'
-  };
-
   return (
-    <div>
-      <CommentList />
-      <CommentForm />
+    <div className="container mx-auto p-4">
+      <CommentList isEdit={isEdit} setIsEdit={setIsEdit} setTargetValue={setTargetValue} />
+      <CommentForm
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        targetValue={targetValue}
+        setTargetValue={setTargetValue}
+        comment={isEdit ? targetValue : undefined}
+      />
     </div>
   );
-
-  //TODO comment 테이블 post_id 항목 생성 (입력시 paramsId 할당)
 };
 
 export default Comment;
