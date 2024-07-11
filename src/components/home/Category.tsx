@@ -6,6 +6,7 @@ import { Book, Item } from '@/types/book.type';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import SkeletonItem from './SkeletonItem';
+import Link from 'next/link';
 
 export default function Category() {
   const [queryType, setQueryType] = useState<string>('Bestseller');
@@ -27,7 +28,8 @@ export default function Category() {
       const item: Item[] = data.item;
 
       return item;
-    }
+    },
+    staleTime: 30000
   });
 
   return (
@@ -86,7 +88,11 @@ export default function Category() {
       <div className="gap-3 grid grid-cols-2 sm:grid-cols-5">
         {isPending
           ? Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={index} />)
-          : bookItem?.map((item) => <CategoryItem key={item.itemId} item={item} />)}
+          : bookItem?.map((item) => (
+              <Link href={`http://localhost:3000/${item.isbn13}`}>
+                <CategoryItem key={item.itemId} item={item} />
+              </Link>
+            ))}
         {/* {Array.from({ length: 10 }).map((_, index) => (
           <SkeletonItem key={index} />
         ))}
