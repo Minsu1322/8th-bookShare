@@ -1,9 +1,9 @@
 'use client';
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
-import CommentList from './_components/Commentlist';
-import LikedList from './_components/Likedlist';
-import UserInfo from './_components/UserInfo';
+import CommentList from './_components/commentlist';
+import LikedList from './_components/likedlist';
+import UserInfo from './_components/userInfo';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
