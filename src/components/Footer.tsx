@@ -13,13 +13,7 @@ export default function Footer() {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <path
-            d="M12 18H4V42H12V18Z"
-            stroke="#1E1E1E"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          <path d="M12 18H4V42H12V18Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
           <path
             d="M8 12C10.2091 12 12 10.2091 12 8C12 5.79086 10.2091 4 8 4C5.79086 4 4 5.79086 4 8C4 10.2091 5.79086 12 8 12Z"
             stroke="#1E1E1E"
@@ -33,13 +27,13 @@ export default function Footer() {
             href="https://nbcamp.spartacodingclub.kr/?next=%2Fmypage%2Fattendance&utm_source=google&utm_medium=pmax&utm_campaign=nbc&utm_content=backend_java&utm_term=&gad_source=1&gclid=CjwKCAjwnK60BhA9EiwAmpHZwy_tgCwAdAyZE5paMiXUQk4lgk0SKd09K-WeExCd4X_IoTlqpmQ9ghoC-88QAvD_BwE"
             target="_blank"
           >
-            <Image src="/images/sparta.png" alt="sparta" width={40} height={40}></Image>
+            <Image src="/images/sparta.png" alt="sparta" width={40} height={40} className="w-auto h-auto"></Image>
           </Link>
           <div>내일배움캠프 팔팔하조(A08)</div>
         </section>
         <section className="flex gap-3">
           <Link href="https://github.com/Minsu1322/8th-bookShare" target="_blank">
-            <Image src="/images/github.png" alt="github" width={30} height={30}></Image>
+            <Image src="/images/github.png" alt="github" width={30} height={30} className="w-auto h-auto"></Image>
           </Link>
           <Link href="https://www.notion.so/teamsparta/A08-6d5377e0fbc943d9af66659c3c83fce5" target="_blank">
             <Image src="/images/notion.png" alt="notion" width={30} height={30}></Image>
