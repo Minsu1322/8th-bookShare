@@ -19,3 +19,23 @@
 <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" /> 
 <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white" />
 <img src="https://img.shields.io/badge/Next.js-%23000000.svg?style=for-the-badge&logo=Next.js&logoColor=white" />
+
+## 📑 페이지구성
+- 메인페이지
+ - 상세페이지
+- 로그인 & 회원가입 페이지
+- 마이페이지
+
+## 📑 메인페이지
+- AladinApi를 통해 책들의 정보를 메인페이지에 표시
+- 베스트셀러, 신규, 인기책들을 분류해서 표시
+- Pagination을 통해 각 페이지를 통해 표시
+
+## 📑 상세페이지
+- 선택한 책의 정보, 가격, 제목 및 구매버튼 등을 표시
+- 댓글조회 & 수정 & 등록기능 구현
+
+
+## 📑 마이페이지
+- 로그인 & 회원가입 기능 구현
+
