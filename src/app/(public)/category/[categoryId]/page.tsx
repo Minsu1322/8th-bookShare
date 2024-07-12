@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Key, useEffect, useState } from 'react';
 import CategoryTabs from './CategoryTabs';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface CategoryPageProps {
   params: { categoryId: number };
@@ -98,7 +99,11 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         <div className="gap-5 grid grid-cols-2 sm:grid-cols-5" style={{ rowGap: '30px' }}>
           {isPending
             ? Array.from({ length: 50 }).map((_, index) => <SkeletonItem key={index} />)
-            : data?.item.map((item) => <CategoryItem key={item.itemId} item={item} />)}
+            : data?.item.map((item) => (
+                <Link key={item.isbn13} href={`http://localhost:3000/${item.isbn13}`}>
+                  <CategoryItem key={item.itemId} item={item} />
+                </Link>
+              ))}
         </div>
         <div className="mt-6 flex justify-center">
           <Pagination isCompact showControls total={totalPages} page={page} onChange={(page) => setPage(page)} />
