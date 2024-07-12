@@ -29,7 +29,7 @@
     "react-hot-toast": "^2.4.1",
     "react-quill": "^2.0.0",
     "react-toastify": "^10.0.5",
-    "supabase": "^1.178.2",
+    "supabase": "^1.183.5",
     "uuidv4": "^6.2.13",
     "zustand": "^4.5.4"
   },
