@@ -1,7 +1,7 @@
 import { ButtonType } from '@/types/button.type';
 import React from 'react';
 
-const Button = ({ style, label, onClick }: ButtonType) => {
+const ButtonComponent = ({ style, label, onClick }: ButtonType) => {
   return (
     <button className={`${style} rounded-full`} onClick={onClick}>
       {label}
@@ -9,4 +9,4 @@ const Button = ({ style, label, onClick }: ButtonType) => {
   );
 };
 
-export default Button;
+export default ButtonComponent;

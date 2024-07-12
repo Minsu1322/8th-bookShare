@@ -1,5 +1,8 @@
 'use client';
 
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Dropdown,
@@ -89,6 +92,30 @@ export default function Header() {
     }
   ];
 
+  const supabase = createClient();
+  const router = useRouter();
+
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const session = supabase.auth.getSession(); // 사용자가 로그인되어 있는지 여부를 확인
+    setIsLoggedIn(session !== null);
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      // 사용자가 로그인하거나 로그아웃할 때마다 호출되며, 콜백 함수를 통해 이벤트와 사용자 세션 정보를 전달받는다. 일반적으로 로그인 상태 변화에 따라 UI를 업데이트하거나 특정 작업을 수행하는 데 사용
+      setIsLoggedIn(session !== null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe(); // 사용자의 인증 상태 변화를 실시간으로 감지
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
+
   return (
     <header>
       <Navbar maxWidth="full" className="bg-main">
@@ -146,12 +173,33 @@ export default function Header() {
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent justify="end">
-          <NavbarItem>
-            <Button className="bg-white text-black">Sign In</Button>
-          </NavbarItem>
-          <NavbarItem>
-            <Button className="bg-black text-white">Register</Button>
-          </NavbarItem>
+          {isLoggedIn ? (
+            <>
+              <NavbarItem>
+                <Link href="/login">
+                  <Button className="bg-white text-black font-semibold">마이페이지</Button>
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
+                  로그아웃
+                </Button>
+              </NavbarItem>
+            </>
+          ) : (
+            <>
+              <NavbarItem>
+                <Link href="/login">
+                  <Button className="bg-white text-black font-semibold">로그인</Button>
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link href="/signup">
+                  <Button className="bg-black text-white font-semibold">회원가입</Button>
+                </Link>
+              </NavbarItem>
+            </>
+          )}
         </NavbarContent>
       </Navbar>
     </header>
