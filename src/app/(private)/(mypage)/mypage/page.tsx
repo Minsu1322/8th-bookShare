@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
 import CommentList from './_components/commentlist';
-import LikedList from './_components/Likedlist';
+import LikedList from './_components/likedlist';
 import UserInfo from './_components/userInfo';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
