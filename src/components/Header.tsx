@@ -1,12 +1,97 @@
 'use client';
-import { createClient } from '@/utils/supabase/client';
-import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem
+} from '@nextui-org/react';
 
 export default function Header() {
+  const genres = [
+    {
+      key: 'home',
+      label: '가정/요리/뷰티'
+    },
+    {
+      key: 'health',
+      label: '건강/취미/레저'
+    },
+    {
+      key: 'business',
+      label: '경제경영'
+    },
+    {
+      key: 'classic',
+      label: '고전'
+    },
+    {
+      key: 'science',
+      label: '과학'
+    },
+    {
+      key: 'comic',
+      label: '만화'
+    },
+    {
+      key: 'social science',
+      label: '사회과학'
+    },
+    {
+      key: 'novel',
+      label: '소설/시/희곡'
+    },
+    {
+      key: 'certificate',
+      label: '수험서/자격증'
+    },
+    {
+      key: 'children',
+      label: '어린이'
+    },
+    {
+      key: 'essay',
+      label: '에세이'
+    },
+    {
+      key: 'travel',
+      label: '여행'
+    },
+    {
+      key: 'history',
+      label: '역사'
+    },
+    {
+      key: 'art',
+      label: '예술/대중문화'
+    },
+    {
+      key: 'foreign language',
+      label: '외국어'
+    },
+    {
+      key: 'infant',
+      label: '유아'
+    },
+    {
+      key: 'high school',
+      label: '고등학교 참고서'
+    },
+    {
+      key: 'university',
+      label: '대학교재/전문서적'
+    }
+  ];
+
   const supabase = createClient();
   const router = useRouter();
 
@@ -31,56 +116,31 @@ export default function Header() {
     router.push('/');
   };
 
-  // const supabase = createClient();
-  // const router = useRouter();
-
-  // const [user, setUser] = useState<any>(null);
-
-  // useEffect(() => {
-  //   async function getUser() {
-  //     const supabase = createClient();
-  //     const { data, error } = await supabase.auth.getUser();
-  //     if (error || !data?.user) {
-  //       console.log('no user');
-  //     } else {
-  //       setUser(data.user);
-  //     }
-  //   }
-  //   getUser();
-
-  // const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-  //   setUser(session?.user ?? null);
-  // });
-
-  // return () => {
-  //   authListener.subscription.unsubscribe();
-  // };
-  // }, []);
-
-  // const handleLogout = async () => {
-  //   await supabase.auth.signOut();
-  //   setUser(null);
-  //   router.push('/');
-  // };
-
   return (
     <header>
       <Navbar maxWidth="full" className="bg-main">
-        <NavbarContent className="hidden sm:flex gap-6 text-white font-bold" justify="start">
+        <NavbarContent className="hidden sm:flex gap-6 font-bold" justify="start">
           <NavbarItem>
-            <Link href="#">국내도서</Link>
+            <Dropdown>
+              <DropdownTrigger>
+                <Link className="text-white">국내도서</Link>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Dynamic Actions" items={genres}>
+                {(genre) => <DropdownItem key={genre.key}>{genre.label}</DropdownItem>}
+              </DropdownMenu>
+            </Dropdown>
           </NavbarItem>
           <NavbarItem>
-            <Link href="#">외국도서</Link>
+            <Link className="text-white">외국도서</Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="#">eBook</Link>
+            <Link className="text-white">eBook</Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="#">책In Only</Link>
+            <Link className="text-white">책In Only</Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="#">커뮤니티</Link>
+            <Link className="text-white">커뮤니티</Link>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="center">

@@ -1,74 +1,78 @@
 'use client';
 
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Link,
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  Pagination
-} from '@nextui-org/react';
+import { Navbar, NavbarContent, NavbarItem, Pagination } from '@nextui-org/react';
 import CategoryItem from './CategoryItem';
+import { Book, Item } from '@/types/book.type';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import SkeletonItem from './SkeletonItem';
 
 export default function Category() {
-  const genres = [
-    {
-      key: 'home',
-      label: '가정/요리/뷰티'
-    },
-    {
-      key: 'health',
-      label: '건강/취미/레저'
-    },
-    {
-      key: 'business',
-      label: '경제경영'
-    },
-    {
-      key: 'classic',
-      label: '고전'
-    },
-    {
-      key: 'comic',
-      label: '만화'
-    },
-    {
-      key: 'socialScience',
-      label: '사회과학'
-    },
-    {
-      key: 'novel',
-      label: '소설/시/희곡'
+  const [queryType, setQueryType] = useState<string>('Bestseller');
+  const [page, setPage] = useState<number>(1);
+
+  const {
+    data: bookItem,
+    isPending,
+    error
+  } = useQuery<Item[], Error>({
+    queryKey: ['books', queryType, page],
+    queryFn: async ({ queryKey }) => {
+      const queryType = queryKey[1];
+      const page = queryKey[2];
+      console.log(queryType, page);
+
+      const response = await fetch(`/api/AladinApi?QueryType=${queryType}&page=${page}`);
+      const data: Book = await response.json();
+      const item: Item[] = data.item;
+
+      return item;
     }
-  ];
+  });
+
   return (
     <section className="max-w-7xl m-auto">
       <Navbar maxWidth="full" position="static">
         <NavbarContent className="hidden sm:flex gap-4" justify="start">
-          <NavbarItem isActive>
-            <Dropdown>
-              <DropdownTrigger>
-                <Link>전체</Link>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Dynamic Actions" items={genres}>
-                {(genre) => <DropdownItem key={genre.key}>{genre.label}</DropdownItem>}
-              </DropdownMenu>
-            </Dropdown>
+          <NavbarItem isActive={queryType === 'Bestseller'}>
+            <button
+              onClick={() => {
+                setQueryType('Bestseller');
+                setPage(1);
+              }}
+            >
+              베스트셀러
+            </button>
           </NavbarItem>
-          <NavbarItem>
-            <Link>베스트셀러</Link>
+          <NavbarItem isActive={queryType === 'ItemNewAll'}>
+            <button
+              onClick={() => {
+                setQueryType('ItemNewAll');
+                setPage(1);
+              }}
+            >
+              새로 나온 책
+            </button>
           </NavbarItem>
-          <NavbarItem>
-            <Link>새로 나온 책</Link>
+          <NavbarItem isActive={queryType === 'ItemNewSpecial'}>
+            <button
+              onClick={() => {
+                setQueryType('ItemNewSpecial');
+                setPage(1);
+              }}
+            >
+              화제의 책
+            </button>
           </NavbarItem>
-          <NavbarItem>
-            <Link>베스트 예감</Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link>화제의 책</Link>
+          <NavbarItem isActive={queryType === 'BlogBest'}>
+            <button
+              onClick={() => {
+                setQueryType('BlogBest');
+                setPage(1);
+              }}
+            >
+              베스트 예감
+            </button>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
@@ -80,12 +84,24 @@ export default function Category() {
         </NavbarContent>
       </Navbar>
       <div className="gap-3 grid grid-cols-2 sm:grid-cols-5">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <CategoryItem key={index} />
+        {isPending
+          ? Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={index} />)
+          : bookItem?.map((item) => <CategoryItem key={item.itemId} item={item} />)}
+        {/* {Array.from({ length: 10 }).map((_, index) => (
+          <SkeletonItem key={index} />
         ))}
+        {bookItem?.map((item) => (
+          <CategoryItem key={item.itemId} item={item} />
+        ))} */}
       </div>
       <div className="mt-6 flex justify-center">
-        <Pagination isCompact showControls total={68} initialPage={1} />
+        <Pagination
+          isCompact
+          showControls
+          total={queryType === 'BlogBest' ? 10 : 100}
+          page={page}
+          onChange={(page) => setPage(page)}
+        />
       </div>
     </section>
   );
