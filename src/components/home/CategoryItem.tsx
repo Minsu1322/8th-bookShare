@@ -12,7 +12,7 @@ function truncateText(text: string, maxLength: number): string {
 
 export default function CategoryItem({ item }: CategoryItemProps) {
   const truncatedDescription: string = truncateText(item.description, 100);
-  const truncatedTitle: string = truncateText(item.title, 40);
+  const truncatedTitle: string = truncateText(item.title, 18);
   const truncatedAuthor: string = truncateText(item.author, 10);
 
   return (
@@ -21,8 +21,8 @@ export default function CategoryItem({ item }: CategoryItemProps) {
         <Image src={item.cover} alt="책 표지" width="100%" className="object-cover max-h-[300px] object-top" />
       </CardBody>
       <CardFooter className="text-sm flex flex-col justify-start">
-        <b>{truncatedTitle}</b>
-        <p>{truncatedDescription}</p>
+        <b className="absolute h-[22px]">{truncatedTitle}</b>
+        <p className="mt-7 h-[130px]">{truncatedDescription || '설명 없음'}</p>
         <div className="mt-2 flex justify-between w-full">
           <div className="flex gap-2">
             <Image src="/images/heart.png" alt="heart" width={30}></Image>
