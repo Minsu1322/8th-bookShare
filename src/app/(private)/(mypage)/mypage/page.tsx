@@ -12,6 +12,7 @@ import { redirect } from 'next/navigation';
 import { UserInfoType } from '@/types/userInfo.type';
 import { logout } from '@/app/logout/actions';
 
+import { Badge, Avatar, Spinner } from '@nextui-org/react';
 const Mypage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const avatarImgRef = useRef(null);
@@ -97,12 +98,6 @@ const Mypage = () => {
       //업로드한 아바타 이미지 URL를 확보
       const imgURL = `https://blthjtndgzdzyqcvkdmm.supabase.co/storage/v1/object/public/avatars/${data.path}`;
 
-      // 아바타 이미지 업로드 성공 후 users 테이블에 업데이트
-      // const { data: userData } = await supabase
-      //   .from('users')
-      //   .update({ avatar: imgURL })
-      //   .eq('id', userInfo?.id || '')
-      //   .single();
       updateAvatarImg.mutate(imgURL);
       toast.success('아바타 업로드 완료!', {
         position: 'top-right'
@@ -117,16 +112,16 @@ const Mypage = () => {
 
   const taps = [
     { label: '회원정보', content: userInfo ? <UserInfo userInfo={userInfo} /> : null },
-    { label: '댓글목록', content: <CommentList /> },
+    { label: '댓글목록', content: userInfo ? <CommentList userInfo={userInfo} /> : null },
     { label: '찜 목록', content: <LikedList /> }
   ];
-  if (isPending) return <div>loading...</div>;
+  if (isPending) return <Spinner className="w-full h-[670px] mx-auto" />;
   if (isError) return <div>Error</div>;
   return (
     <>
       <div className="flex justify-between sm:w-[1280px] mx-auto items-center">
         <div className="bg-[#af5858] w-[250px] h-[670px] flex flex-col items-center justify-center rounded-tr-[50px]">
-          <div className="w-[100px] h-[100px] rounded-full overflow-hidden mb-[10px]">
+          <div className="w-20 h-20 rounded-full overflow-hidden mb-[10px]">
             <Image
               src={userInfo.avatar || '/images/noImg.png'}
               width={100}
@@ -135,6 +130,9 @@ const Mypage = () => {
               className="block w-full h-full "
             />
           </div>
+          {/* <Badge color="success" content="" shape="circle" placement="bottom-right">
+            <Avatar radius="full" size="lg" src={userInfo.avatar || '/images/noImg.png'} />
+          </Badge> */}
           <div>
             <label
               htmlFor="avatarImgUpload"
