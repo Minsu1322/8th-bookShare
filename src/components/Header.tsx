@@ -1,5 +1,6 @@
 'use client';
 
+import useGenres from '@/hooks/useGenres';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -19,80 +20,8 @@ import {
 } from '@nextui-org/react';
 
 export default function Header() {
-  const genres = [
-    {
-      key: 'home',
-      label: '가정/요리/뷰티'
-    },
-    {
-      key: 'health',
-      label: '건강/취미/레저'
-    },
-    {
-      key: 'business',
-      label: '경제경영'
-    },
-    {
-      key: 'classic',
-      label: '고전'
-    },
-    {
-      key: 'science',
-      label: '과학'
-    },
-    {
-      key: 'comic',
-      label: '만화'
-    },
-    {
-      key: 'social science',
-      label: '사회과학'
-    },
-    {
-      key: 'novel',
-      label: '소설/시/희곡'
-    },
-    {
-      key: 'certificate',
-      label: '수험서/자격증'
-    },
-    {
-      key: 'children',
-      label: '어린이'
-    },
-    {
-      key: 'essay',
-      label: '에세이'
-    },
-    {
-      key: 'travel',
-      label: '여행'
-    },
-    {
-      key: 'history',
-      label: '역사'
-    },
-    {
-      key: 'art',
-      label: '예술/대중문화'
-    },
-    {
-      key: 'foreign language',
-      label: '외국어'
-    },
-    {
-      key: 'infant',
-      label: '유아'
-    },
-    {
-      key: 'high school',
-      label: '고등학교 참고서'
-    },
-    {
-      key: 'university',
-      label: '대학교재/전문서적'
-    }
-  ];
+  const [mallType, setMallType] = useState<string | null>(null);
+  const { koreanGenres, foreignGenres, ebookGenres } = useGenres();
 
   const supabase = createClient();
   const router = useRouter();
@@ -123,27 +52,59 @@ export default function Header() {
     <header>
       <Navbar maxWidth="full" className="bg-main">
         <NavbarContent className="hidden sm:flex gap-6 font-bold" justify="start">
-          <NavbarItem>
+          <NavbarItem isActive={mallType === 'korean'}>
             <Dropdown>
               <DropdownTrigger>
-                <Link className="text-white">국내도서</Link>
+                <button onClick={() => setMallType('korean')} className="text-white">
+                  국내도서
+                </button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="Dynamic Actions" items={genres}>
-                {(genre) => <DropdownItem key={genre.key}>{genre.label}</DropdownItem>}
+              <DropdownMenu aria-label="Dynamic Actions" items={koreanGenres}>
+                {(genre) => (
+                  <DropdownItem key={genre.id} href={`/category/${genre.id}`}>
+                    {genre.label}
+                  </DropdownItem>
+                )}
+              </DropdownMenu>
+            </Dropdown>
+          </NavbarItem>
+          <NavbarItem isActive={mallType === 'foreign'}>
+            <Dropdown>
+              <DropdownTrigger>
+                <button onClick={() => setMallType('foreign')} className="text-white">
+                  외국도서
+                </button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Dynamic Actions" items={foreignGenres}>
+                {(genre) => (
+                  <DropdownItem key={genre.id} href={`/category/${genre.id}`}>
+                    {genre.label}
+                  </DropdownItem>
+                )}
+              </DropdownMenu>
+            </Dropdown>
+          </NavbarItem>
+          <NavbarItem isActive={mallType === 'ebook'}>
+            <Dropdown>
+              <DropdownTrigger>
+                <button onClick={() => setMallType('ebook')} className="text-white">
+                  eBook
+                </button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Dynamic Actions" items={ebookGenres}>
+                {(genre) => (
+                  <DropdownItem key={genre.id} href={`/category/${genre.id}`}>
+                    {genre.label}
+                  </DropdownItem>
+                )}
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
           <NavbarItem>
-            <Link className="text-white">외국도서</Link>
+            <button className="text-white">책In Only</button>
           </NavbarItem>
           <NavbarItem>
-            <Link className="text-white">eBook</Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link className="text-white">책In Only</Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link className="text-white">커뮤니티</Link>
+            <button className="text-white">커뮤니티</button>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="center">
@@ -179,7 +140,7 @@ export default function Header() {
           {isLoggedIn ? (
             <>
               <NavbarItem>
-                <Link href="/login">
+                <Link href="/mypage">
                   <Button className="bg-white text-black font-semibold">마이페이지</Button>
                 </Link>
               </NavbarItem>

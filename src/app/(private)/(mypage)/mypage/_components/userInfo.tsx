@@ -1,11 +1,15 @@
-import React from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
-import Button from '@/components/Button';
-import ChangeUserInfo from './ChangeUserInfo';
+import ButtonComponent from '@/components/ButtonComponent';
+import { UserInfoPropsType } from '@/types/userInfo.type';
+import ChangePassWord from './ChangePassWord';
+import ChangeUserId from './ChangeUserId';
+import ChangeUserNickName from './ChangeUserNickName';
+import { createClient } from '@/utils/supabase/client';
+import { logout } from '@/app/logout/actions';
+import { AuthError } from '@supabase/supabase-js';
+import AccountDeletion from './AccountDeletion';
 
-const UserInfo = () => {
-  // const data = getUserInfo();
-  // console.log(data);
+const UserInfo = ({ userInfo }: UserInfoPropsType) => {
   return (
     <Table isStriped aria-label="Example static collection table">
       <TableHeader>
@@ -15,30 +19,30 @@ const UserInfo = () => {
       <TableBody>
         <TableRow key="1" className="h-20">
           <TableCell className="text-center text-lg font-bold">회원번호</TableCell>
-          <TableCell className="text-base">ABCD123456789</TableCell>
+          <TableCell className="text-base">{userInfo?.id.split('-')[0].toUpperCase()}</TableCell>
         </TableRow>
         <TableRow key="2" className="h-20">
           <TableCell className="text-center text-lg font-bold">닉네임</TableCell>
           <TableCell className="w-2/3">
-            <ChangeUserInfo info={'르탄이'}/>
+            <ChangeUserNickName info={userInfo.nickname} />
           </TableCell>
         </TableRow>
         <TableRow key="3" className="h-20">
           <TableCell className="text-center text-lg font-bold">아이디</TableCell>
           <TableCell>
-          <ChangeUserInfo info={'result1234'}/>
+            <ChangeUserId info={userInfo.email} />
           </TableCell>
         </TableRow>
         <TableRow key="4" className="h-20">
           <TableCell className="text-center text-lg font-bold">비밀번호</TableCell>
           <TableCell>
-            <Button label={'변경'} style={'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold'} />
+            <ChangePassWord />
           </TableCell>
         </TableRow>
         <TableRow key="5" className="h-20">
           <TableCell className="text-center text-lg font-bold">회원탈퇴</TableCell>
           <TableCell>
-            <Button label={'탈퇴'} style={'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold'} />
+            <AccountDeletion userInfo={userInfo.id}/>
           </TableCell>
         </TableRow>
       </TableBody>
