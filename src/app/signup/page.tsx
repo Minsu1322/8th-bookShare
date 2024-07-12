@@ -8,9 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function SignupPage() {
   const supabase = createClient();
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
   const handleSignUp = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -34,11 +34,8 @@ export default function SignupPage() {
       .select('id')
       .eq('email', email)
       .single();
-
-    if (emailError) {
-      setError(emailError.message);
-      return;
-    }
+    console.log('이메일1', emailExist);
+    console.log('이메일2', emailError);
 
     if (emailExist) {
       return toast.error('이미 사용 중인 이메일입니다!');
@@ -49,11 +46,6 @@ export default function SignupPage() {
       .select('id')
       .eq('nickname', nickname)
       .single();
-
-    if (nicknameError) {
-      setError(nicknameError.message);
-      return;
-    }
 
     if (nicknameExist) {
       return toast.error('이미 사용 중인 닉네임입니다!');
@@ -73,6 +65,7 @@ export default function SignupPage() {
     if (error) {
       setError(error.message);
     } else {
+      toast.success('회원가입 성공!');
       router.push('/');
     }
   };

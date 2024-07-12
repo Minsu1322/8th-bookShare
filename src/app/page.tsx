@@ -5,10 +5,6 @@ import DemoClientComponent from '@/components/DemoClientComponent';
 export default function Home() {
   return (
     <main>
-      <form action={logout}>
-        <button type="submit">Logout</button>
-      </form>
-      <DemoClientComponent />
       <Category />
     </main>
   );
