@@ -6,8 +6,9 @@ import { Spinner } from '@nextui-org/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useParams } from 'next/navigation';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { TargetValue } from './Comment';
+import CommentPagination from './Pagination';
 
 interface Props {
   isEdit: boolean;
@@ -18,8 +19,14 @@ interface Props {
 
 const CommentList = ({ isEdit, setIsEdit, setTargetValue, user }: Props) => {
   const queryClient = useQueryClient();
+
   const { id: postId } = useParams<{ id: string }>();
-  const { comments, commentsIsPending } = useCommentQuery({ postId });
+  const { comments, isPending } = useCommentQuery({ postId });
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const offset: number = (page - 1) * pageSize;
+  const commentsToDisplay = comments?.slice(offset, offset + pageSize);
 
   const handleEdit = (comment: Tables<'comments'>) => {
     setIsEdit(false);
@@ -64,20 +71,31 @@ const CommentList = ({ isEdit, setIsEdit, setTargetValue, user }: Props) => {
     deleteMutation.mutate(id);
   };
 
-  //TODO 로딩 처리 다르게 변경(넥스트 로딩 문서 찾기)
-  if (commentsIsPending || !comments)
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
+
+  if (isPending || !comments)
     return (
       <div className="w-[100%] flex justify-center">
         <Spinner />
       </div>
     );
+  const totalPages = Math.ceil(comments.length / 6);
+
   return (
     <div>
-      {comments.length === 0 ? (
+      <div className="flex gap-2 items-center my-4">
+        <div className="border-b-2 border-black flex gap-2 items-center">
+          <h3 className=" font-bold text-[20px]">코멘트</h3>
+          <p className="text-[#AF5858]">{comments.length}</p>
+        </div>
+      </div>
+      {commentsToDisplay?.length === 0 ? (
         <div>No comments yet</div>
       ) : (
-        <ul className="border-y-2 border-black mt-[6rem]">
-          {comments.map((comment) => {
+        <ul className="border-y-2 border-black mt-[2rem]">
+          {commentsToDisplay?.map((comment) => {
             const { id, title, content, writer, created_at, user_id } = comment;
             const date = dayjs(created_at).locale('ko').format('YYYY-MM-DD HH:mm');
             const buttonClass = 'w-fit px-2 py-1 rounded text-white';
@@ -96,7 +114,7 @@ const CommentList = ({ isEdit, setIsEdit, setTargetValue, user }: Props) => {
                 <div
                   className={`hidden ${
                     user?.id === user_id && 'group-hover:flex'
-                  } gap-2 transition-opacity duration-300 absolute right-16`}
+                  } gap-2 transition-opacity duration-300 absolute right-[11vw]`}
                 >
                   <button className={`${buttonClass} bg-gray-700 border-2`} onClick={() => handleEdit(comment)}>
                     {isEdit ? '취소' : '수정'}
@@ -110,6 +128,7 @@ const CommentList = ({ isEdit, setIsEdit, setTargetValue, user }: Props) => {
           })}
         </ul>
       )}
+      <CommentPagination page={page} totalComments={totalPages} onPageChange={handlePageChange} />
     </div>
   );
 };

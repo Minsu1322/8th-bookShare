@@ -5,7 +5,6 @@ const supabase = createClient();
 
 export const POST = async (request: NextRequest) => {
   const response = await request.json();
-
   const { title, content, post_id, writer, user_id }: Tables<'comments'> = response;
 
   const { error } = await supabase.from('comments').insert({ title, content, post_id, writer, user_id });
@@ -14,7 +13,6 @@ export const POST = async (request: NextRequest) => {
     console.error(error);
     return NextResponse.json({ status: '에러', message: error.message });
   }
-
   return NextResponse.json({ status: '200' });
 };
 
@@ -29,7 +27,7 @@ export const GET = async (request: NextRequest) => {
 
     const response = await supabase
       .from('comments')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
       .eq('post_id', postId);
 
@@ -51,12 +49,9 @@ export const PUT = async (request: NextRequest) => {
     const updateComment = await request.json();
     const { id, ...rest } = updateComment;
 
-    console.log('Request payload:', updateComment);
-
     if (!id) {
       return NextResponse.json({ error: 'id가 올바르지 않습니다' }, { status: 400 });
     }
-    console.log('Updating comment with id:', id, 'and data:', rest);
 
     const { error } = await supabase.from('comments').update(rest).eq('id', id);
 

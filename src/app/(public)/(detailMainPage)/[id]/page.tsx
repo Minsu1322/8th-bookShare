@@ -83,11 +83,6 @@ const MainDetail = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </div>
-
-        <div className="border-2 mt-8 border-gray-300 border-dashed min-h-72 h-auto w-auto rounded-lg p-4 bg-gray-100">
-          <CommentList />
-        </div>
-
       </div>
       <Comment />
     </>

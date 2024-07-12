@@ -10,6 +10,7 @@ import 'react-quill/dist/quill.snow.css';
 import { TargetValue } from './Comment';
 
 type SubmitItem = Pick<Tables<'comments'>, 'id' | 'title' | 'content' | 'post_id' | 'writer'>;
+
 interface Props {
   isEdit: boolean;
   setIsEdit: Dispatch<SetStateAction<boolean>>;
@@ -21,7 +22,7 @@ interface Props {
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, comment, user }: Props) => {
+const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, user }: Props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id: postId } = useParams<{ id: string }>();
