@@ -25,9 +25,12 @@ const CommentList = ({ isEdit, setIsEdit, setTargetValue, user }: Props) => {
   const { comments, isPending } = useCommentQuery({ postId });
 
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(6);
+
   const offset: number = (page - 1) * pageSize;
   const commentsToDisplay = comments?.slice(offset, offset + pageSize);
+
+  // const [totalPages] = useState(() => Math.ceil(comments ? comments.length / 6: ));
 
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -65,15 +68,35 @@ const CommentList = ({ isEdit, setIsEdit, setTargetValue, user }: Props) => {
 
   const deleteMutation = useMutation({
     mutationFn: deleteComment,
-    onSuccess: () => {
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: ['comments', postId] });
+
+      const previousComments = queryClient.getQueryData(['comments', postId]);
+
+      queryClient.setQueryData(['comments', postId], (old: any) => old.filter((comment: any) => comment.id !== id));
+
+      return { previousComments };
+    },
+    onError: (error, id, context) => {
+      queryClient.setQueryData(['comments', postId], context?.previousComments);
+      toast.error(error.message);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       toast.success('삭제 완료');
-    },
-    onError: (error) => {
-      toast.error(error.message);
     }
   });
 
+  // const deleteMutation = useMutation({
+  //   mutationFn: deleteComment,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+  //     toast.success('삭제 완료');
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //   }
+  // });
   const handleDelete = (id: string) => {
     if (!confirm('삭제시 복구가 어렵습니다. 정말 삭제하시겠습니까?')) {
       return;
@@ -91,6 +114,7 @@ const CommentList = ({ isEdit, setIsEdit, setTargetValue, user }: Props) => {
         <Spinner />
       </div>
     );
+
   const totalPages = Math.ceil(comments.length / 6);
 
   return (
