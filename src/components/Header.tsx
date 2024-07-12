@@ -16,7 +16,6 @@ import {
   NavbarContent,
   NavbarItem
 } from '@nextui-org/react';
-import { useState } from 'react';
 
 export default function Header() {
   const [mallType, setMallType] = useState<string | null>(null);
