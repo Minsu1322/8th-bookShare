@@ -51,7 +51,7 @@ export default function Header() {
   return (
     <header>
       <Navbar maxWidth="full" className="bg-main">
-        <NavbarContent className="hidden sm:flex gap-6 font-bold" justify="start">
+        <NavbarContent className="hidden sm:flex gap-6 font-bold ml-[100px]" justify="start">
           <NavbarItem isActive={mallType === 'korean'}>
             <Dropdown>
               <DropdownTrigger>
@@ -100,12 +100,6 @@ export default function Header() {
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
-          <NavbarItem>
-            <button className="text-white">책In Only</button>
-          </NavbarItem>
-          <NavbarItem>
-            <button className="text-white">커뮤니티</button>
-          </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="center">
           <NavbarBrand>
@@ -136,7 +130,7 @@ export default function Header() {
             </Link>
           </NavbarBrand>
         </NavbarContent>
-        <NavbarContent justify="end">
+        <NavbarContent justify="end" className="mr-[100px]">
           {isLoggedIn ? (
             <>
               <NavbarItem>
