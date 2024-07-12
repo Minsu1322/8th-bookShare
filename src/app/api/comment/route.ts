@@ -1,78 +1,89 @@
+import { Tables } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
-
-interface CommentData {
-  title: string;
-  content: string;
-  post_id: string;
-}
+const supabase = createClient();
 
 export const POST = async (request: NextRequest) => {
-  const supabase = createClient();
-
   const response = await request.json();
-  console.log(response);
 
-  // const requestBody = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
+  const { title, content, post_id, writer, user_id }: Tables<'comments'> = response;
 
-  // console.log('-------------------------------');
-  // console.log(requestBody);
-  // console.log('--------------------------------');
-
-  const { title, content, post_id }: CommentData = response;
-
-  const { data, error } = await supabase.from('comments').insert({ title, content, post_id });
-  console.log(data);
-  console.log('----------------------------------------------------------------------');
-  console.log(error);
-  //error : response.status is not a function
-  //TODO 1 response 자체가 undefinded 반환. 결과값 제대로 받아오기
-  //2 response에 status 항목이 있는지 확인
+  const { error } = await supabase.from('comments').insert({ title, content, post_id, writer, user_id });
 
   if (error) {
-    console.log(error);
-    // return response.status(500).json({ error: error.message });
+    console.error(error);
+    return NextResponse.json({ status: '에러', message: error.message });
   }
 
-  return NextResponse.json({ status: 'success' });
-  // response.status(200).json({ message: '댓글 저장 완료', data });
+  return NextResponse.json({ status: '200' });
 };
-// export default async (request: NextApiRequest, response: NextApiResponse) => {
-//   switch (request.method) {
-//     case 'POST':
-//       const { title, content, post_id } = request.body;
 
-//       const { data: postData, error: postError } = await supabase
-//         .from('comments')
-//         .insert([{ title, content, post_id }]);
+export const GET = async (request: NextRequest) => {
+  try {
+    const url = new URL(request.url);
+    const postId = url.searchParams.get('post_id');
 
-//       if (postError) {
-//         console.error(postError);
-//         return response.status(500).json({ error: postError.message });
-//       }
-//       response.status(200).json({ message: '댓글 저장 완료', postData });
-//       break;
+    if (!postId) {
+      return NextResponse.json({ message: 'post_id 가 필요합니다' }, { status: 400 });
+    }
 
-//     case 'GET':
-//       const { data: getData, error: getError } = await supabase.from('comments').select('*');
+    const response = await supabase
+      .from('comments')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .eq('post_id', postId);
 
-//       if (getError) {
-//         return response.status(500).json({ error: getError.message });
-//       }
+    const { data, error } = response;
+    if (error) {
+      console.error(error);
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
 
-//       response.status(200).json({ comments: getData });
-//       break;
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: '예기치 않은 오류가 발생했습니다' }, { status: 500 });
+  }
+};
 
-// case 'PATCH':
+export const PUT = async (request: NextRequest) => {
+  try {
+    const updateComment = await request.json();
+    const { id, ...rest } = updateComment;
 
-//   break;
+    console.log('Request payload:', updateComment);
 
-// case 'DELETE':
+    if (!id) {
+      return NextResponse.json({ error: 'id가 올바르지 않습니다' }, { status: 400 });
+    }
+    console.log('Updating comment with id:', id, 'and data:', rest);
 
-//   break;
+    const { error } = await supabase.from('comments').update(rest).eq('id', id);
 
-//     default:
-//       console.log('request.method:', request.method);
-//       response.status(405).json({ message: 'Method Not Allowed' });
-//   }
-// };
+    if (error) {
+      throw error;
+    }
+    return NextResponse.json({ message: '댓글 업데이트 완료' }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: '댓글 업데이트 중 오류 발생' }, { status: 500 });
+  }
+};
+export const DELETE = async (request: NextRequest) => {
+  const url = new URL(request.url);
+  const id = url.searchParams.get('id');
+  try {
+    if (!id) {
+      return NextResponse.json({ error: 'id가 올바르지 않습니다' }, { status: 400 });
+    }
+
+    const { error } = await supabase.from('comments').delete().eq('id', id);
+    if (error) {
+      throw error;
+    }
+    return NextResponse.json({ message: '댓글 삭제 완료' }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: '삭제 실패' }, { status: 500 });
+  }
+};
