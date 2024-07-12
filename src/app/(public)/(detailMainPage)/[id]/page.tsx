@@ -1,6 +1,5 @@
 'use client';
 import Comment from '@/components/comment/Comment';
-import CommentList from '@/components/comment/CommentList';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
@@ -88,8 +87,8 @@ const MainDetail = ({ params }: { params: { id: string } }) => {
         <div className="border-2 mt-8 border-gray-300 border-dashed min-h-72 h-auto w-auto rounded-lg p-4 bg-gray-100">
           <CommentList />
         </div>
-      </div>
 
+      </div>
       <Comment />
     </>
   );
