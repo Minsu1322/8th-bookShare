@@ -176,7 +176,7 @@ export default function Header() {
           {isLoggedIn ? (
             <>
               <NavbarItem>
-                <Link href="/login">
+                <Link href="/mypage">
                   <Button className="bg-white text-black font-semibold">마이페이지</Button>
                 </Link>
               </NavbarItem>

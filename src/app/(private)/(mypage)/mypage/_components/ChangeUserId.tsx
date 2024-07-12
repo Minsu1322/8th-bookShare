@@ -14,7 +14,6 @@ const ChangeUserId = ({ info }: { info: string }) => {
 
   const isEmail = (checkEmail: string) => emailRegex.test(checkEmail);
 
-  //// 고민거리: info가 닉네임일수있고 이메일 일수있다 이거를 어떻게하면 구분할수있을까?
   //TODO: 아이디 변경 ✅, 비밀번호 변경✅, 회원탈퇴 , 댓글 리스트 나열 및 페이지 네이션
 
   const handleEdit = (): void => {
@@ -121,11 +120,24 @@ const ChangeUserId = ({ info }: { info: string }) => {
       ) : (
         <p className="text-base">{changeInfoRef.current}</p>
       )}
-      <Button
-        label={isEditing ? '저장' : '변경'}
-        style={'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold'}
-        onClick={isEditing ? handleSave : handleEdit}
-      />
+      <div>
+        {isEditing && (
+          <Button
+            label="취소"
+            style={
+              'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold hover:bg-opacity-80 transition mr-3'
+            }
+            onClick={() => setIsEditing(false)}
+          />
+        )}
+        <Button
+          label={isEditing ? '저장' : '변경'}
+          style={
+            'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold hover:bg-opacity-80 transition'
+          }
+          onClick={isEditing ? handleSave : handleEdit}
+        />
+      </div>
     </div>
   );
 };
