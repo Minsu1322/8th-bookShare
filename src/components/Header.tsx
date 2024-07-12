@@ -3,6 +3,8 @@
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Button,
   Dropdown,
@@ -113,6 +115,7 @@ export default function Header() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    toast.success('로그아웃 되었습니다.');
     router.push('/');
   };
 
@@ -194,7 +197,7 @@ export default function Header() {
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link href="/signup">
+                <Link href="/terms">
                   <Button className="bg-black text-white font-semibold">회원가입</Button>
                 </Link>
               </NavbarItem>
