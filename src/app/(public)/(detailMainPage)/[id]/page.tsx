@@ -78,7 +78,7 @@ const MainDetail = ({ params }: { params: { id: string } }) => {
 
             <div className="mt-6">
               <p className="text-2xl font-semibold mb-4">{items.priceStandard.toLocaleString()}원</p>
-              <button className="w-full md:w-auto bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md transform transition duration-500 hover:scale-105 hover:bg-blue-600">
+              <button className="w-full w-auto bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md transform transition duration-500 hover:scale-105 hover:bg-blue-600">
                 구매하기
               </button>
             </div>
