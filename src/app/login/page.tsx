@@ -6,13 +6,31 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {
-  const supabase = createClient();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  // const handleKakaoSignIn = async () => {
+  //   const supabase = createClient();
+  //   const { error } = await supabase.auth.signInWithOAuth({
+  //     provider: 'kakao',
+  //     options: {
+  //       queryParams: { access_type: 'offline', prompt: 'select_account' },
+  //       redirectTo: `http://localhost:3000/api/auth/callback`
+  //     }
+  //   });
+  //   if (error) {
+  //     console.error('Kakao Sign In Error:', error.message);
+  //     toast.error('카카오 로그인에 실패했습니다.');
+  //   } else {
+  //     toast.success('카카오 로그인에 성공했습니다.');
+  //     router.push('/');
+  //   }
+  // };
+
   const handleLogin = async (e: React.FormEvent<HTMLButtonElement>) => {
+    const supabase = createClient();
     e.preventDefault();
 
     // 클라이언트 사이드 유효성 검사
@@ -43,6 +61,7 @@ export default function LoginPage() {
         setError(signInError.message);
       }
     } else {
+      toast.success('로그인 되었습니다.');
       router.push('/');
     }
   };
@@ -102,7 +121,7 @@ export default function LoginPage() {
           >
             로그인
           </button>
-          <a href="/signup">
+          <a href="/terms">
             <button
               className="w-[141px] h-[44px] rounded-[20px] border border-[#af5858] bg-[#af5858] text-white text-[12px] font-bold py-3 px-11 tracking-wider uppercase transition-transform ease-in duration-[80ms]"
               type="button"
@@ -110,6 +129,12 @@ export default function LoginPage() {
               회원가입
             </button>
           </a>
+          {/* <button
+            onClick={handleKakaoSignIn}
+            className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 mt-4"
+          >
+            카카오로 로그인
+          </button> */}
         </form>
       </div>
     </div>
