@@ -93,12 +93,6 @@ export default function Category() {
                 <CategoryItem key={item.itemId} item={item} />
               </Link>
             ))}
-        {/* {Array.from({ length: 10 }).map((_, index) => (
-          <SkeletonItem key={index} />
-        ))}
-        {bookItem?.map((item) => (
-          <CategoryItem key={item.itemId} item={item} />
-        ))} */}
       </div>
       <div className="mt-6 flex justify-center">
         <Pagination
