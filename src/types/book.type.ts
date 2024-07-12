@@ -35,6 +35,7 @@ export type Item = {
   adult: boolean;
   fixedPrice: boolean;
   customerReviewRank: number;
-  bestRank: number;
+  bestDuration?: string;
+  bestRank?: number;
   subInfo: object;
 };
