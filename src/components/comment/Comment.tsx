@@ -1,6 +1,8 @@
 'use client';
+import { createClient } from '@/utils/supabase/client';
+import { Spinner } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 
@@ -29,17 +31,42 @@ const Comment = () => {
     created_at: ''
   });
 
-  const isLogin: boolean = true;
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    async function getUser() {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data?.user) {
+        console.log('no user');
+      } else {
+        setUser(data.user);
+        setIsLoading(false);
+      }
+    }
+    getUser();
+  }, []);
+
+  console.log({ user });
+
+  if (isLoading) {
+    return (
+      <div className="w-[100%] flex justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
-      <CommentList isEdit={isEdit} setIsEdit={setIsEdit} setTargetValue={setTargetValue} />
+      <CommentList isEdit={isEdit} setIsEdit={setIsEdit} setTargetValue={setTargetValue} user={user} />
       <CommentForm
         isEdit={isEdit}
         setIsEdit={setIsEdit}
         targetValue={targetValue}
         setTargetValue={setTargetValue}
         comment={isEdit ? targetValue : undefined}
+        user={user}
       />
     </div>
   );

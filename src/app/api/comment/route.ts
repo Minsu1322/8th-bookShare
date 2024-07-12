@@ -6,9 +6,9 @@ const supabase = createClient();
 export const POST = async (request: NextRequest) => {
   const response = await request.json();
 
-  const { title, content, post_id, writer }: Tables<'comments'> = response;
+  const { title, content, post_id, writer, user_id }: Tables<'comments'> = response;
 
-  const { error } = await supabase.from('comments').insert({ title, content, post_id, writer });
+  const { error } = await supabase.from('comments').insert({ title, content, post_id, writer, user_id });
 
   if (error) {
     console.error(error);
@@ -24,25 +24,28 @@ export const GET = async (request: NextRequest) => {
     const postId = url.searchParams.get('post_id');
 
     if (!postId) {
-      return NextResponse.json({ status: '에러', message: 'post_id 가 필요합니다' }, { status: 400 });
+      return NextResponse.json({ message: 'post_id 가 필요합니다' }, { status: 400 });
     }
 
-    const response = await supabase.from('comments').select('*').eq('post_id', postId);
+    const response = await supabase
+      .from('comments')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .eq('post_id', postId);
 
     const { data, error } = response;
     if (error) {
       console.error(error);
-      return NextResponse.json({ status: '에러', message: error.message }, { status: 500 });
+      return NextResponse.json({ message: error.message }, { status: 500 });
     }
 
     return NextResponse.json(data);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ status: '에러', message: '예기치 않은 오류가 발생했습니다' }, { status: 500 });
+    return NextResponse.json({ message: '예기치 않은 오류가 발생했습니다' }, { status: 500 });
   }
 };
 
-//TODO updateComment 타입 지정
 export const PUT = async (request: NextRequest) => {
   try {
     const updateComment = await request.json();
