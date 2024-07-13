@@ -4,14 +4,14 @@ import { createClient } from '@/utils/supabase/client';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const ChangeUserId = ({ info }: { info: string }) => {
+const ChangeUserId = ({ info }: { info: string }): React.JSX.Element => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const changeInfoRef = useRef<string>(info);
   const supabase = createClient();
 
-  const emailRegex = useMemo(() => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, []);
+  const emailRegex = useMemo<RegExp>(() => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, []);
 
-  const isEmail = useCallback(
+  const isEmail = useCallback<(checkEmail: string) => boolean>(
     (checkEmail: string) => {
       return emailRegex.test(checkEmail);
     },
@@ -22,7 +22,7 @@ const ChangeUserId = ({ info }: { info: string }) => {
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     setIsEditing(false);
 
     if (changeInfoRef.current.trim() === '') {
@@ -37,7 +37,6 @@ const ChangeUserId = ({ info }: { info: string }) => {
       if (userError || !userData.user) {
         throw new Error('사용자 정보를 가져오는 중 오류 발생');
       }
-      const userId = userData.user.id;
       if (isEmail(changeInfoRef.current)) {
         const { data: existingUser, error: emailCheckError } = await supabase
           .from('users')
@@ -70,8 +69,14 @@ const ChangeUserId = ({ info }: { info: string }) => {
         });
       }
     } catch (error) {
-      console.error(`이메일 업데이트 중 오류 발생:`, error);
-      toast.error(`이메일 업데이트 중 오류가 발생했습니다.`, {
+      if (error instanceof Error) {
+        console.error(`이메일 업데이트 중 오류 발생:`, error);
+        toast.error(`이메일 업데이트 중 오류 발생했습니다.`, {
+          position: 'top-right'
+        });
+      }
+      console.error(`이메일 업데이트 중 예상치 못한 오류 발생:`, error);
+      toast.error(`이메일 업데이트 중 예상치 못한 오류 발생했습니다.`, {
         position: 'top-right'
       });
     }

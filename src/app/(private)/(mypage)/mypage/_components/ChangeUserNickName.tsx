@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const ChangeUserNickName = ({ info }: { info: string }) => {
+const ChangeUserNickName = ({ info }: { info: string }): React.JSX.Element => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [changeInfo, setChangeInfo] = useState<string>(info);
   const supabase = createClient();
@@ -13,7 +13,7 @@ const ChangeUserNickName = ({ info }: { info: string }) => {
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     setIsEditing(false);
 
     if (changeInfo.trim() === '') {
@@ -62,7 +62,7 @@ const ChangeUserNickName = ({ info }: { info: string }) => {
         <input
           type="text"
           value={changeInfo}
-          placeholder='8자 이내로 입력해주세요'
+          placeholder="8자 이내로 입력해주세요"
           className="text-base outline-double pl-2 py-1 rounded block box-border"
           onChange={handleChange}
           maxLength={8}
