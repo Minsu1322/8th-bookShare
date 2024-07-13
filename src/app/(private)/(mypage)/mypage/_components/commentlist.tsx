@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Card, CardHeader, CardFooter, Pagination, Skeleton,Spinner } from '@nextui-org/react';
+import { Card, CardHeader, CardFooter, Pagination, Skeleton, Spinner } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
 import { UserInfoPropsType } from '@/types/userInfo.type';
@@ -47,15 +47,15 @@ const CommentList = ({ userInfo }: UserInfoPropsType) => {
   const totalPages = Math.ceil(Number(myCommentslist?.total) / pageSize) || 1;
 
   const handlePageChange = (page: number): void => {
-    setCurrentPage(page); // 페이지 변경 처리
+    setCurrentPage(page); 
   };
-  if (isPending) return <Spinner className='w-[950px] h-[670px] mx-auto'/>;
+  if (isPending) return <Spinner className="w-[950px] h-[670px] mx-auto" />;
   if (isError) return <div>error</div>;
 
   return (
     <>
       {myCommentslist.data.length > 0 ? (
-        <ul className="grid grid-cols-4 gap-4 h-[500px]">
+        <ul className="grid grid-cols-4 gap-4 h-[520px]">
           {myCommentslist.data.map((item, index) => (
             <li key={index}>
               {isPending ? (
@@ -79,13 +79,13 @@ const CommentList = ({ userInfo }: UserInfoPropsType) => {
                 <Link href={`/${item.post_id}`}>
                   <Card isFooterBlurred className="col-span-12 sm:col-span-6 h-[250px]">
                     <CardHeader className="absolute z-10 top-1 flex-col items-start">
-                      <p className="text-tiny text-white/60 uppercase font-bold">{item.title}</p>
-                      <h4 className="text-black font-medium text-2xl">{item.content}</h4>
+                      <h5 className="text-white font-medium text-xl mb-1 h-[30px] truncate w-full">{item.title}</h5>
+                      <p dangerouslySetInnerHTML={{ __html: item.content || '' }} className="text-tiny text-white/60 uppercase font-bold w-full text-ellipsis overflow-hidden line-clamp-6"/>
                     </CardHeader>
                     <CoverImg postId={item.post_id} />
                     <CardFooter className="absolute bg-white/20 bottom-0 border-t-1 border-zinc-100/80 z-10 justify-between">
                       <div>
-                        <p className="text-black text-tiny">{item.writer}</p>
+                        <p className="text-black text-tiny font-bold">{userInfo.nickname}</p>
                       </div>
                     </CardFooter>
                   </Card>
@@ -100,7 +100,7 @@ const CommentList = ({ userInfo }: UserInfoPropsType) => {
         showControls
         total={totalPages}
         initialPage={currentPage}
-        className="mx-auto w-min mt-[30px]"
+        className="mx-auto w-min"
         onChange={handlePageChange}
       />
     </>

@@ -49,30 +49,21 @@ export type Database = {
       }
       users: {
         Row: {
-<<<<<<< HEAD
-=======
           avatar: string
->>>>>>> 1ed751f37a152bc7b9af1212e04d228df56bccf4
           created_at: string
           email: string
           id: string
           nickname: string
         }
         Insert: {
-<<<<<<< HEAD
-=======
           avatar?: string
->>>>>>> 1ed751f37a152bc7b9af1212e04d228df56bccf4
           created_at?: string
           email: string
           id?: string
           nickname: string
         }
         Update: {
-<<<<<<< HEAD
-=======
           avatar?: string
->>>>>>> 1ed751f37a152bc7b9af1212e04d228df56bccf4
           created_at?: string
           email?: string
           id?: string
@@ -93,16 +84,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-<<<<<<< HEAD
-      [_ in never]: never
-=======
       delete_user: {
         Args: {
           user_id: string
         }
         Returns: undefined
       }
->>>>>>> 1ed751f37a152bc7b9af1212e04d228df56bccf4
     }
     Enums: {
       [_ in never]: never

@@ -1,20 +1,22 @@
 'use client';
 import Button from '@/components/ButtonComponent';
 import { createClient } from '@/utils/supabase/client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const ChangeUserId = ({ info }: { info: string }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  // const [changeInfo, setChangeInfo] = useState<string>(info); //초기값을 설정해야됨 props로
   const changeInfoRef = useRef<string>(info);
   const supabase = createClient();
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = useMemo(() => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, []);
 
-  const isEmail = (checkEmail: string) => emailRegex.test(checkEmail);
-
-  //TODO: 아이디 변경 ✅, 비밀번호 변경✅, 회원탈퇴 , 댓글 리스트 나열 및 페이지 네이션
+  const isEmail = useCallback(
+    (checkEmail: string) => {
+      return emailRegex.test(checkEmail);
+    },
+    [emailRegex]
+  );
 
   const handleEdit = (): void => {
     setIsEditing(true);
@@ -35,18 +37,13 @@ const ChangeUserId = ({ info }: { info: string }) => {
       if (userError || !userData.user) {
         throw new Error('사용자 정보를 가져오는 중 오류 발생');
       }
-      const userId = userData.user.id; //f7bb7bd7-a9bd-4d3e-8cfb-91adf7c749a2 으로 출력됨
-      // console.log(isEmail(changeInfo));
+      const userId = userData.user.id;
       if (isEmail(changeInfoRef.current)) {
         const { data: existingUser, error: emailCheckError } = await supabase
           .from('users')
           .select('*')
           .eq('email', changeInfoRef.current)
           .single();
-        // if (emailCheckError) {
-        //   throw emailCheckError;
-        // }
-        console.log('users테이블 검색결과', existingUser);
 
         if (existingUser) {
           toast.error(`변경사항 없거나 이미 사용 중인 이메일 주소입니다. 다른 이메일 주소를 입력해주세요.`, {
@@ -88,10 +85,7 @@ const ChangeUserId = ({ info }: { info: string }) => {
       if (event === 'USER_UPDATED') {
         setTimeout(async () => {
           const { data } = await supabase.auth.getSession();
-          // console.log('session===>', data.session?.user.id);
-
           const userId = data.session?.user.id;
-
           if (userId || isEmail(changeInfoRef.current)) {
             const { error } = await supabase
               .from('users')
@@ -104,7 +98,7 @@ const ChangeUserId = ({ info }: { info: string }) => {
         }, 0);
       }
     });
-  }, [supabase]);
+  }, [supabase, isEmail]);
 
   return (
     <div className="flex items-center justify-between">

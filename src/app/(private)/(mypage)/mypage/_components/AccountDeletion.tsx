@@ -1,5 +1,4 @@
 import { logout } from '@/app/logout/actions';
-import ButtonComponent from '@/components/ButtonComponent';
 import { createClient } from '@/utils/supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import React from 'react';
@@ -47,21 +46,12 @@ const AccountDeletion = ({ userInfo }: { userInfo: string }) => {
         </ModalContent>
       </Modal>
       <Button
-        // variant="flat"
-        // color="warning"
         onPress={onOpen}
         className="bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold hover:bg-opacity-80 transition"
         size="sm"
       >
         탈퇴
       </Button>
-      {/* <ButtonComponent
-        label={'탈퇴'}
-        style={
-          'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold hover:bg-opacity-80 transition'
-        }
-        onClick={deleteUser}
-      /> */}
     </>
   );
 };
