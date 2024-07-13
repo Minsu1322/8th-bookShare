@@ -33,10 +33,10 @@ export default function Footer() {
         </section>
         <section className="flex gap-3">
           <Link href="https://github.com/Minsu1322/8th-bookShare" target="_blank">
-            <Image src="/images/github.png" alt="github" width={30} height={30} className="w-auto h-auto"></Image>
+            <Image src="/images/github.png" alt="github" width={30} height={30} className="w-[24px]"></Image>
           </Link>
           <Link href="https://www.notion.so/teamsparta/A08-6d5377e0fbc943d9af66659c3c83fce5" target="_blank">
-            <Image src="/images/notion.png" alt="notion" width={30} height={30}></Image>
+            <Image src="/images/notion.png" alt="notion" width={30} height={30} className="w-[24px]"></Image>
           </Link>
         </section>
       </div>

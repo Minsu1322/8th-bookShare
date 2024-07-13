@@ -48,14 +48,17 @@ const CoverImg = ({ postId }: PostIdProps) => {
           </div>
         </Card>
       ) : (
-        <Image
-          removeWrapper
-          alt="Card example background"
-          className="z-0 -translate-y-6 object-cover w-full h-full"
-          src={coverImg.cover || '/noImg.png'}
-          width={50}
-          height={50}
-        />
+        <div className='relative w-full h-full'>
+          <Image
+            removeWrapper
+            alt="Card example background"
+            className="z-0 -translate-y-6 object-cover w-full h-full"
+            src={coverImg.cover || '/noImg.png'}
+            width={50}
+            height={50}
+          />
+          <div className='bg-black/50 w-full h-full absolute top-0 left-0'></div>
+        </div>
       )}
     </>
   );

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const ChangeUserNickName = ({ info }: { info: string }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [changeInfo, setChangeInfo] = useState<string>(info); //초기값을 설정해야됨 props로
+  const [changeInfo, setChangeInfo] = useState<string>(info);
   const supabase = createClient();
 
   const handleEdit = (): void => {
@@ -62,9 +62,10 @@ const ChangeUserNickName = ({ info }: { info: string }) => {
         <input
           type="text"
           value={changeInfo}
+          placeholder='8자 이내로 입력해주세요'
           className="text-base outline-double pl-2 py-1 rounded block box-border"
           onChange={handleChange}
-          maxLength={25}
+          maxLength={8}
         />
       ) : (
         <p className="text-base">{changeInfo}</p>

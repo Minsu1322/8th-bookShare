@@ -1,12 +1,8 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
-import ButtonComponent from '@/components/ButtonComponent';
 import { UserInfoPropsType } from '@/types/userInfo.type';
 import ChangePassWord from './ChangePassWord';
 import ChangeUserId from './ChangeUserId';
 import ChangeUserNickName from './ChangeUserNickName';
-import { createClient } from '@/utils/supabase/client';
-import { logout } from '@/app/logout/actions';
-import { AuthError } from '@supabase/supabase-js';
 import AccountDeletion from './AccountDeletion';
 
 const UserInfo = ({ userInfo }: UserInfoPropsType) => {
