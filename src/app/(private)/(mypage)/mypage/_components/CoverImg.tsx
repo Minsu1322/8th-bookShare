@@ -1,7 +1,7 @@
 'use client';
-import { Image } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Skeleton } from '@nextui-org/react';
+import Image from 'next/image';
 interface PostIdProps {
   postId: string;
 }
@@ -53,7 +53,6 @@ const CoverImg = ({ postId }: PostIdProps): JSX.Element => {
       ) : (
         <div className="relative w-full h-full">
           <Image
-            removeWrapper
             alt="Card example background"
             className="z-0 -translate-y-6 object-cover w-full h-full"
             src={coverImg || '/noImg.png'}
