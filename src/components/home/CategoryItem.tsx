@@ -1,5 +1,6 @@
 import { Item } from '@/types/book.type';
-import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
+import { Card, CardBody, CardFooter } from '@nextui-org/react';
+import Image from 'next/image';
 
 interface CategoryItemProps {
   item: Item;
@@ -18,7 +19,15 @@ export default function CategoryItem({ item }: CategoryItemProps) {
   return (
     <Card shadow="sm" isPressable className="h-[500px]">
       <CardBody className="overflow-visible p-0 m-auto w-[250px] h-[300px]">
-        <Image src={item.cover} alt="책 표지" width="100%" className="object-cover max-h-[300px] object-top" />
+        <div className='w-full h-[300px]'>
+          <Image
+            src={item.cover}
+            alt="책 표지"
+            width={50}
+            height={50}
+            className="w-full h-full"
+          />
+        </div>
       </CardBody>
       <CardFooter className="text-sm flex flex-col justify-start">
         <b className="absolute h-[22px]">{truncatedTitle}</b>
