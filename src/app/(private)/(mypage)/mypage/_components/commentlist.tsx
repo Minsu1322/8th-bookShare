@@ -4,11 +4,11 @@ import { Card, CardHeader, CardFooter, Pagination, Skeleton, Spinner } from '@ne
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
 import { UserInfoPropsType } from '@/types/userInfo.type';
-import { SupabaseClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 import CoverImg from './CoverImg';
+import { Mycommentlist } from '@/types/mypageCommentslist.type';
 
-const CommentList = ({ userInfo }: UserInfoPropsType) => {
+const CommentList = ({ userInfo }: UserInfoPropsType): React.JSX.Element => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 8;
   const supabase = createClient();
@@ -16,7 +16,7 @@ const CommentList = ({ userInfo }: UserInfoPropsType) => {
     data: myCommentslist,
     isPending,
     isError
-  } = useQuery({
+  } = useQuery<Mycommentlist, Error, Mycommentlist, [string, number]>({
     queryKey: ['myComments', currentPage],
     queryFn: async () => {
       try {
@@ -34,20 +34,21 @@ const CommentList = ({ userInfo }: UserInfoPropsType) => {
           .select('*', { count: 'exact' })
           .eq('user_id', userInfo.id);
 
-        return { data, total };
+        return { data, total } as Mycommentlist;
       } catch (error) {
-        if (error instanceof SupabaseClient) {
+        if (error instanceof Error) {
           console.error('Supabase에서 에러 발생:', error);
         }
         console.error('예상치 못한 에러 발생:', error);
         throw error;
       }
-    }
+    },
+    enabled: !!userInfo.id
   });
-  const totalPages = Math.ceil(Number(myCommentslist?.total) / pageSize) || 1;
+  const totalPages: number = Math.ceil(Number(myCommentslist?.total) / pageSize) || 1;
 
   const handlePageChange = (page: number): void => {
-    setCurrentPage(page); 
+    setCurrentPage(page);
   };
   if (isPending) return <Spinner className="w-[950px] h-[670px] mx-auto" />;
   if (isError) return <div>error</div>;
@@ -80,7 +81,10 @@ const CommentList = ({ userInfo }: UserInfoPropsType) => {
                   <Card isFooterBlurred className="col-span-12 sm:col-span-6 h-[250px]">
                     <CardHeader className="absolute z-10 top-1 flex-col items-start">
                       <h5 className="text-white font-medium text-xl mb-1 h-[30px] truncate w-full">{item.title}</h5>
-                      <p dangerouslySetInnerHTML={{ __html: item.content || '' }} className="text-tiny text-white/60 uppercase font-bold w-full text-ellipsis overflow-hidden line-clamp-6"/>
+                      <p
+                        dangerouslySetInnerHTML={{ __html: item.content || '' }}
+                        className="text-tiny text-white/60 uppercase font-bold w-full text-ellipsis overflow-hidden line-clamp-6"
+                      />
                     </CardHeader>
                     <CoverImg postId={item.post_id} />
                     <CardFooter className="absolute bg-white/20 bottom-0 border-t-1 border-zinc-100/80 z-10 justify-between">
@@ -94,7 +98,18 @@ const CommentList = ({ userInfo }: UserInfoPropsType) => {
             </li>
           ))}
         </ul>
-      ) : null}
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <div className="text-center">
+            <p>댓글 남긴 기록이 없습니다.</p>
+            <Link href="/">
+              <button className="mt-4 bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold hover:bg-opacity-80 transition rounded-full">
+                홈으로
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
       <Pagination
         isCompact
         showControls
