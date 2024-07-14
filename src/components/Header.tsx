@@ -53,7 +53,7 @@ export default function Header() {
   };
 
   if (isLoggedIn === null) {
-    return <div>Loading</div>; // 로딩 중일 때 표시할 컴포넌트
+    return <div></div>; // 로딩 중일 때 표시할 컴포넌트
   }
 
   return (

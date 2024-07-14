@@ -5,17 +5,16 @@ import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { UserInfoType } from '@/types/userInfo.type';
 import { logout } from '@/app/logout/actions';
 import { Spinner } from '@nextui-org/react';
 import CommentList from './commentlist';
 import UserInfo from './userInfo';
 
-
-const Mypage = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const avatarImgRef = useRef(null);
+const Mypage = (): React.JSX.Element => {
+  const [activeTab, setActiveTab] = useState<number>(0);
+  const avatarImgRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -23,9 +22,9 @@ const Mypage = () => {
     data: userInfo,
     isPending,
     isError
-  } = useQuery({
+  } = useQuery<UserInfoType, Error, UserInfoType, string[]>({
     queryKey: ['userInfo'],
-    queryFn: async (): Promise<UserInfoType> => {
+    queryFn: async () => {
       try {
         const { data, error } = await supabase.auth.getUser();
         const userId = data.user?.id as string;
@@ -111,7 +110,7 @@ const Mypage = () => {
     { label: '댓글목록', content: userInfo ? <CommentList userInfo={userInfo} /> : null }
   ];
   useEffect(() => {
-    const checkSession = async () => {
+    const checkSession = async (): Promise<void> => {
       const { data, error } = await supabase.auth.getSession();
       if (!data.session) {
         router.push('/login');

@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 import { TargetValue } from './Comment';
 
 type SubmitItem = Pick<Tables<'comments'>, 'id' | 'title' | 'content' | 'post_id' | 'writer'>;
@@ -31,7 +32,7 @@ const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, user }: P
   const handleChange = (value: string) => {
     if (!user) {
       if (confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
-        router.prefetch('login');
+        return router.push('/login');
       } else return;
     }
     if (value.length <= 200) {
@@ -44,7 +45,7 @@ const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, user }: P
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!user) {
       if (confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
-        router.prefetch('login');
+        return router.push('/login');
       } else return;
     }
     setTargetValue((prev) => ({ ...prev, title: e.target.value }));
@@ -81,7 +82,7 @@ const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, user }: P
 
       const previousComments = queryClient.getQueryData(['comments', postId]);
 
-      queryClient.setQueryData(['comments', postId], (old: any) => [...(old || []), { ...newComment }]);
+      queryClient.setQueryData(['comments', postId], (old: any) => [...(old || []), { ...newComment, id: uuidv4() }]);
 
       setTargetValue({ title: '', content: '' });
       return { previousComments };

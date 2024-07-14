@@ -9,37 +9,42 @@ import {
   useDisclosure,
   Input
 } from '@nextui-org/react';
-
 import { EyeFilledIcon } from './EyeFilledIcon';
 import { EyeSlashFilledIcon } from './EyeSlashFilledIcon';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 
-const ChangePassWord = () => {
+const ChangePassWord = (): React.JSX.Element => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [visibility, setVisibility] = useState({
+  const [visibility, setVisibility] = useState<{
+    newPassword: boolean;
+    confirmPassword: boolean;
+  }>({
     newPassword: false,
     confirmPassword: false
   });
-  const [changePassWord, setChangePassWord] = useState({
+  const [changePassWord, setChangePassWord] = useState<{
+    newChangePassWord: string;
+    confirmChangePassWord: string;
+  }>({
     newChangePassWord: '',
     confirmChangePassWord: ''
   });
   const supabase = createClient();
-  const toggleVisibility = (item: keyof typeof visibility) => {
+  const toggleVisibility = (item: keyof typeof visibility): void => {
     setVisibility((prev) => ({
       ...prev,
       [item]: !prev[item]
     }));
   };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setChangePassWord({
       ...changePassWord,
       [e.target.name]: e.target.value
     });
   };
-  const handleSaveNewPassWord = async (onClose: () => void) => {
+  const handleSaveNewPassWord = async (onClose: () => void): Promise<void> => {
     // console.log(changePassWord.confirmChangePassWord)
     // console.log(changePassWord.newChangePassWord)
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

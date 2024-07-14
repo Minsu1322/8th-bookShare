@@ -3,11 +3,11 @@ import { createClient } from '@/utils/supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import React from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react';
-const AccountDeletion = ({ userInfo }: { userInfo: string }) => {
+const AccountDeletion = ({ userInfo }: { userInfo: string }): React.JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const supabase = createClient();
 
-  const deleteUser = async () => {
+  const deleteUser = async (): Promise<void> => {
     const user_id = userInfo;
     try {
       const { data, error } = await supabase.rpc('delete_user', { user_id });
@@ -31,13 +31,13 @@ const AccountDeletion = ({ userInfo }: { userInfo: string }) => {
             <>
               <ModalHeader className="flex flex-col gap-1">재확인</ModalHeader>
               <ModalBody>
-                <p>회원탈퇴 하시겠습니까?</p>
+                <p>정말로 회원탈퇴 하시겠습니까?</p>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={deleteUser}>
+                <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={onClose}>
+                <Button color="primary" onPress={deleteUser}>
                   확인
                 </Button>
               </ModalFooter>
