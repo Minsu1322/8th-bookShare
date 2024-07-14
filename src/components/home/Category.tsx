@@ -21,9 +21,8 @@ export default function Category() {
     queryFn: async ({ queryKey }) => {
       const queryType = queryKey[1];
       const page = queryKey[2];
-      console.log(queryType, page);
 
-      const response = await fetch(`/api/AladinApi?QueryType=${queryType}&page=${page}`);
+      const response: Response = await fetch(`/api/AladinApi?QueryType=${queryType}&page=${page}`);
       const data: Book = await response.json();
       const item: Item[] = data.item;
 
