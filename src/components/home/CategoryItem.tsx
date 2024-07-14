@@ -25,14 +25,8 @@ export default function CategoryItem({ item, isForeign }: CategoryItemProps) {
   return (
     <Card shadow="sm" isPressable className="h-[500px]">
       <CardBody className="overflow-visible p-0 m-auto w-[250px] h-[300px]">
-        <div className='w-full h-[300px]'>
-          <Image
-            src={item.cover}
-            alt="책 표지"
-            width={50}
-            height={50}
-            className="w-full h-full"
-          />
+        <div className="w-full h-[300px]">
+          <Image src={item.cover} alt="책 표지" width={200} height={200} className="w-full h-full" />
         </div>
       </CardBody>
       <CardFooter className="text-sm flex flex-col justify-start">

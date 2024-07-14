@@ -51,10 +51,6 @@ export default function Header() {
     router.push('/');
   };
 
-  if (isLoggedIn === null) {
-    return <div></div>; // 로딩 중일 때 표시할 컴포넌트
-  }
-
   return (
     <header>
       <Navbar maxWidth="full" className="bg-main">
@@ -132,7 +128,9 @@ export default function Header() {
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent justify="end" className="mr-[100px]">
-          {isLoggedIn ? (
+          {isLoggedIn === null ? (
+            <div className="text-white">로딩 중...</div> // 로딩 중일 때 표시할 컴포넌트
+          ) : isLoggedIn ? (
             <>
               <NavbarItem>
                 <Link href="/mypage">
