@@ -1,11 +1,20 @@
-import { logout } from '@/app/logout/actions';
 import { createClient } from '@/utils/supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import React from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+
 const AccountDeletion = ({ userInfo }: { userInfo: string }): React.JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const supabase = createClient();
+  const router = useRouter();
+
+  const deleteUserLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success('회원탈퇴 되었습니다.');
+    router.push('/');
+  };
 
   const deleteUser = async (): Promise<void> => {
     const user_id = userInfo;
@@ -15,7 +24,7 @@ const AccountDeletion = ({ userInfo }: { userInfo: string }): React.JSX.Element 
         throw error;
       }
       onClose();
-      await logout();
+      await deleteUserLogout();
     } catch (error) {
       if (error instanceof AuthError) {
         console.error('회원탈퇴 실패==>', error.message);
