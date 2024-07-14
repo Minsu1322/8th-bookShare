@@ -1,13 +1,13 @@
 import { logout } from '@/app/logout/actions';
 import { createClient } from '@/utils/supabase/client';
 import { AuthError } from '@supabase/supabase-js';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react';
 const AccountDeletion = ({ userInfo }: { userInfo: string }): React.JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const supabase = createClient();
 
-  const deleteUser = async (): Promise<void> => {
+  const deleteUser = useCallback(async () => {
     const user_id = userInfo;
     try {
       const { data, error } = await supabase.rpc('delete_user', { user_id });
@@ -22,7 +22,7 @@ const AccountDeletion = ({ userInfo }: { userInfo: string }): React.JSX.Element 
       }
       console.error('회원탈퇴 시 예상치 못한 에러 발생');
     }
-  };
+  }, [userInfo, onClose]);
   return (
     <>
       <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} shouldBlockScroll={false} isDismissable={false}>

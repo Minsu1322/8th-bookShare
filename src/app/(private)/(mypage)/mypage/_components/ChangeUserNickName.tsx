@@ -1,23 +1,22 @@
 'use client';
 import Button from '@/components/ButtonComponent';
 import { createClient } from '@/utils/supabase/client';
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const ChangeUserNickName = ({ info }: { info: string }): React.JSX.Element => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [changeInfo, setChangeInfo] = useState<string>(info);
+  const changeInfoRef = useRef<string>(info);
   const supabase = createClient();
 
   const handleEdit = (): void => {
     setIsEditing(true);
   };
 
-  const handleSave = async (): Promise<void> => {
+  const handleSaveNickname = useCallback(async (): Promise<void> => {
     setIsEditing(false);
-
+    const changeInfo = changeInfoRef.current; 
     if (changeInfo.trim() === '') {
-      setChangeInfo(info);
       toast.warning(`빈칸으로 변경할 수 없습니다.`, {
         position: 'top-right'
       });
@@ -51,9 +50,10 @@ const ChangeUserNickName = ({ info }: { info: string }): React.JSX.Element => {
         position: 'top-right'
       });
     }
-  };
+  }, [changeInfoRef, info]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setChangeInfo(e.target.value);
+    changeInfoRef.current = e.target.value;
   };
 
   return (
@@ -61,14 +61,13 @@ const ChangeUserNickName = ({ info }: { info: string }): React.JSX.Element => {
       {isEditing ? (
         <input
           type="text"
-          value={changeInfo}
-          placeholder="8자 이내로 입력해주세요"
+          placeholder={changeInfoRef.current}
           className="text-base outline-double pl-2 py-1 rounded block box-border"
           onChange={handleChange}
           maxLength={8}
         />
       ) : (
-        <p className="text-base">{changeInfo}</p>
+        <p className="text-base">{changeInfoRef.current}</p>
       )}
       <div>
         {isEditing && (
@@ -85,7 +84,7 @@ const ChangeUserNickName = ({ info }: { info: string }): React.JSX.Element => {
           style={
             'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold hover:bg-opacity-80 transition'
           }
-          onClick={isEditing ? handleSave : handleEdit}
+          onClick={isEditing ? handleSaveNickname : handleEdit}
         />
       </div>
     </div>

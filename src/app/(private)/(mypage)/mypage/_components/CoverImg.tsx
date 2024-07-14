@@ -1,4 +1,3 @@
-'use client';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Skeleton } from '@nextui-org/react';
 import Image from 'next/image';
@@ -35,19 +34,11 @@ const CoverImg = ({ postId }: PostIdProps): JSX.Element => {
     <>
       {isPending ? (
         <Card className="w-[200px] space-y-5 p-4" radius="lg">
-          <Skeleton className="rounded-lg">
-            <div className="h-24 rounded-lg bg-default-300"></div>
-          </Skeleton>
+          <Skeleton className="rounded-lg h-24 bg-default-300" />
           <div className="space-y-3">
-            <Skeleton className="w-3/5 rounded-lg">
-              <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
-            </Skeleton>
-            <Skeleton className="w-4/5 rounded-lg">
-              <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
-            </Skeleton>
-            <Skeleton className="w-2/5 rounded-lg">
-              <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
-            </Skeleton>
+            <Skeleton className="w-3/5 rounded-lg h-3 bg-default-200" />
+            <Skeleton className="w-4/5 rounded-lg h-3 bg-default-200" />
+            <Skeleton className="w-2/5 rounded-lg h-3 bg-default-300" />
           </div>
         </Card>
       ) : (
@@ -56,8 +47,9 @@ const CoverImg = ({ postId }: PostIdProps): JSX.Element => {
             alt="Card example background"
             className="z-0 -translate-y-6 object-cover w-full h-full"
             src={coverImg || '/noImg.png'}
-            width={50}
-            height={50}
+            width={30}
+            height={30}
+            priority
           />
           <div className="bg-black/50 w-full h-full absolute top-0 left-0"></div>
         </div>
