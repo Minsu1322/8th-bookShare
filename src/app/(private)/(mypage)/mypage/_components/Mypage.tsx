@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -64,46 +64,49 @@ const Mypage = (): React.JSX.Element => {
     }
   });
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files!;
-    const fileExtension = ['.jpg', '.jpeg', '.png', '.gif'];
-    if (!files['0']) {
-      toast.error('아바타 업로드 취소하셨습니다.', {
-        position: 'top-right'
-      });
-      return;
-    }
-    const userUploadfileExtension = files['0'].name.split('.').pop()?.toLowerCase();
-    if (!fileExtension.includes(`.${userUploadfileExtension}`)) {
-      console.error('지원하지 않는 파일 형식입니다. JPG, JPEG, PNG, GIF 파일만 업로드 가능합니다.');
-      toast.error('지원하지 않는 파일 형식입니다. JPG, JPEG, PNG, GIF 파일만 업로드 가능합니다.', {
-        position: 'top-right'
-      });
-      return;
-    }
-    try {
-      const { data, error } = await supabase.storage.from('avatars').upload(`avatar_${files[0].name}`, files[0], {
-        cacheControl: '3600',
-        upsert: true
-      });
-
-      if (error) {
-        throw error;
+  const handleAvatarUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files!;
+      const fileExtension = ['.jpg', '.jpeg', '.png', '.gif'];
+      if (!files['0']) {
+        toast.error('아바타 업로드 취소하셨습니다.', {
+          position: 'top-right'
+        });
+        return;
       }
+      const userUploadfileExtension = files['0'].name.split('.').pop()?.toLowerCase();
+      if (!fileExtension.includes(`.${userUploadfileExtension}`)) {
+        console.error('지원하지 않는 파일 형식입니다. JPG, JPEG, PNG, GIF 파일만 업로드 가능합니다.');
+        toast.error('지원하지 않는 파일 형식입니다. JPG, JPEG, PNG, GIF 파일만 업로드 가능합니다.', {
+          position: 'top-right'
+        });
+        return;
+      }
+      try {
+        const { data, error } = await supabase.storage.from('avatars').upload(`avatar_${files[0].name}`, files[0], {
+          cacheControl: '3600',
+          upsert: true
+        });
 
-      const imgURL = `https://blthjtndgzdzyqcvkdmm.supabase.co/storage/v1/object/public/avatars/${data.path}`;
+        if (error) {
+          throw error;
+        }
 
-      updateAvatarImg.mutate(imgURL);
-      toast.success('아바타 업로드 완료!', {
-        position: 'top-right'
-      });
-    } catch (error) {
-      console.error('파일 업로드 또는 데이터 저장 중 에러 발생:');
-      toast.error('파일 업로드 또는 데이터 저장 중 에러 발생', {
-        position: 'top-right'
-      });
-    }
-  };
+        const imgURL = `https://blthjtndgzdzyqcvkdmm.supabase.co/storage/v1/object/public/avatars/${data.path}`;
+
+        updateAvatarImg.mutate(imgURL);
+        toast.success('아바타 업로드 완료!', {
+          position: 'top-right'
+        });
+      } catch (error) {
+        console.error('파일 업로드 또는 데이터 저장 중 에러 발생:');
+        toast.error('파일 업로드 또는 데이터 저장 중 에러 발생', {
+          position: 'top-right'
+        });
+      }
+    },
+    [supabase, updateAvatarImg]
+  );
 
   const taps = [
     { label: '회원정보', content: userInfo ? <UserInfo userInfo={userInfo} /> : null },
@@ -125,13 +128,16 @@ const Mypage = (): React.JSX.Element => {
     <>
       <div className="flex justify-between sm:w-[1280px] mx-auto items-end">
         <div className="bg-[#af5858] w-[250px] h-[670px] flex flex-col items-center justify-center rounded-tr-[50px]">
-          <div className="w-20 h-20 rounded-full overflow-hidden mb-[10px]">
+          <div className="w-20 h-20 rounded-full overflow-hidden mb-[10px] border-3 border-white">
             <Image
               src={userInfo.avatar || '/images/noImg.png'}
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               alt="avatarImg"
-              className="block w-full h-full "
+              className="block w-[80px] h-[80px] object-cover"
+              fetchPriority="high"
+              decoding="async"
+              priority
             />
           </div>
           <div>

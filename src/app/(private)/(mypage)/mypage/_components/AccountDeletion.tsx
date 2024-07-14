@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/client';
 import { AuthError } from '@supabase/supabase-js';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
@@ -16,7 +16,7 @@ const AccountDeletion = ({ userInfo }: { userInfo: string }): React.JSX.Element 
     router.push('/');
   };
 
-  const deleteUser = async (): Promise<void> => {
+  const deleteUser = useCallback(async () => {
     const user_id = userInfo;
     try {
       const { data, error } = await supabase.rpc('delete_user', { user_id });
@@ -31,7 +31,7 @@ const AccountDeletion = ({ userInfo }: { userInfo: string }): React.JSX.Element 
       }
       console.error('회원탈퇴 시 예상치 못한 에러 발생');
     }
-  };
+  }, [userInfo, onClose]);
   return (
     <>
       <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} shouldBlockScroll={false} isDismissable={false}>
