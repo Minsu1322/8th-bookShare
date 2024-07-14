@@ -28,25 +28,16 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // 초기값을 null로 설정하여 로딩 상태를 구분
 
   useEffect(() => {
-    const savedLoggedInStatus = localStorage.getItem('isLoggedIn');
-    if (savedLoggedInStatus !== null) {
-      setIsLoggedIn(savedLoggedInStatus === 'true');
-    }
-
     const checkSession = async () => {
       const {
         data: { session }
       } = await supabase.auth.getSession();
-      const loggedIn = session !== null;
-      setIsLoggedIn(loggedIn);
-      localStorage.setItem('isLoggedIn', loggedIn.toString());
+      setIsLoggedIn(session !== null);
     };
     checkSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      const loggedIn = session !== null;
-      setIsLoggedIn(loggedIn);
-      localStorage.setItem('isLoggedIn', loggedIn.toString());
+      setIsLoggedIn(session !== null);
     });
 
     return () => {
@@ -57,14 +48,8 @@ export default function Header() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success('로그아웃 되었습니다.');
-    localStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(false);
     router.push('/');
   };
-
-  if (isLoggedIn === null) {
-    return null; // 로딩 중일 때 아무것도 렌더링하지 않음
-  }
 
   return (
     <header>
@@ -143,31 +128,35 @@ export default function Header() {
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent justify="end" className="mr-[100px]">
-          {isLoggedIn ? (
+          {isLoggedIn !== null && (
             <>
-              <NavbarItem>
-                <Link href="/mypage">
-                  <Button className="bg-white text-black font-semibold">마이페이지</Button>
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
-                  로그아웃
-                </Button>
-              </NavbarItem>
-            </>
-          ) : (
-            <>
-              <NavbarItem>
-                <Link href="/login">
-                  <Button className="bg-white text-black font-semibold">로그인</Button>
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Link href="/terms">
-                  <Button className="bg-black text-white font-semibold">회원가입</Button>
-                </Link>
-              </NavbarItem>
+              {isLoggedIn ? (
+                <>
+                  <NavbarItem>
+                    <Link href="/mypage">
+                      <Button className="bg-white text-black font-semibold">마이페이지</Button>
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
+                      로그아웃
+                    </Button>
+                  </NavbarItem>
+                </>
+              ) : (
+                <>
+                  <NavbarItem>
+                    <Link href="/login">
+                      <Button className="bg-white text-black font-semibold">로그인</Button>
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Link href="/terms">
+                      <Button className="bg-black text-white font-semibold">회원가입</Button>
+                    </Link>
+                  </NavbarItem>
+                </>
+              )}
             </>
           )}
         </NavbarContent>
