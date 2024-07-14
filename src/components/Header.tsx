@@ -25,27 +25,19 @@ export default function Header() {
   const supabase = createClient();
   const router = useRouter();
 
-  // 초기 상태를 로컬 스토리지의 값으로 설정
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(() => {
-    const savedLoggedInStatus = localStorage.getItem('isLoggedIn');
-    return savedLoggedInStatus === 'true';
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // 초기값을 null로 설정하여 로딩 상태를 구분
 
   useEffect(() => {
     const checkSession = async () => {
       const {
         data: { session }
       } = await supabase.auth.getSession();
-      const loggedIn = session !== null;
-      setIsLoggedIn(loggedIn);
-      localStorage.setItem('isLoggedIn', loggedIn.toString());
+      setIsLoggedIn(session !== null);
     };
     checkSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      const loggedIn = session !== null;
-      setIsLoggedIn(loggedIn);
-      localStorage.setItem('isLoggedIn', loggedIn.toString());
+      setIsLoggedIn(session !== null);
     });
 
     return () => {
@@ -56,8 +48,6 @@ export default function Header() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success('로그아웃 되었습니다.');
-    localStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(false);
     router.push('/');
   };
 
