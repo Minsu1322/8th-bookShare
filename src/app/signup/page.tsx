@@ -22,7 +22,7 @@ export default function SignupPage() {
 
     // 클라이언트 사이드 유효성 검사
     if (!validateEmail(email)) {
-      return toast.error('유효한 이메일 주소를 입력하세요!');
+      return toast.error('유효한 이메일 주소를 입력하세요!(꼭 .com 으로 끝나는 이메일이어야 합니다!)');
     }
     if (!validatePassword(password)) {
       return toast.error('비밀번호는 최소 8자 이상, 영문자, 숫자, 특수 문자를 포함해야 합니다!');
@@ -34,8 +34,6 @@ export default function SignupPage() {
       .select('id')
       .eq('email', email)
       .single();
-    console.log('이메일1', emailExist);
-    console.log('이메일2', emailError);
 
     if (emailExist) {
       return toast.error('이미 사용 중인 이메일입니다!');
