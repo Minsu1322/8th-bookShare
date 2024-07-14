@@ -3,13 +3,13 @@
 import { Genre } from '@/types/genre.type';
 import { useQueries, UseQueryResult } from '@tanstack/react-query';
 
-export default function useGenres() {
-  const fetchGenres = async (url: string): Promise<Genre[]> => {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Failed to fetch data from ${url}`);
-    return response.json();
-  };
+const fetchGenres = async (url: string): Promise<Genre[]> => {
+  const response: Response = await fetch(url);
+  if (!response.ok) throw new Error(`Failed to fetch data from ${url}`);
+  return response.json();
+};
 
+export default function useGenres() {
   const queries: [UseQueryResult<Genre[], Error>, UseQueryResult<Genre[], Error>, UseQueryResult<Genre[], Error>] =
     useQueries({
       queries: [
@@ -28,9 +28,9 @@ export default function useGenres() {
       ]
     });
 
-  const koreanGenres = queries[0].data;
-  const foreignGenres = queries[1].data;
-  const ebookGenres = queries[2].data;
+  const koreanGenres: Genre[] | undefined = queries[0].data;
+  const foreignGenres: Genre[] | undefined = queries[1].data;
+  const ebookGenres: Genre[] | undefined = queries[2].data;
 
   return { koreanGenres, foreignGenres, ebookGenres };
 }

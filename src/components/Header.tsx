@@ -20,7 +20,6 @@ import {
 } from '@nextui-org/react';
 
 export default function Header() {
-  const [mallType, setMallType] = useState<string | null>(null);
   const { koreanGenres, foreignGenres, ebookGenres } = useGenres();
 
   const supabase = createClient();
@@ -60,12 +59,10 @@ export default function Header() {
     <header>
       <Navbar maxWidth="full" className="bg-main">
         <NavbarContent className="hidden sm:flex gap-6 font-bold ml-[100px]" justify="start">
-          <NavbarItem isActive={mallType === 'korean'}>
+          <NavbarItem>
             <Dropdown>
               <DropdownTrigger>
-                <button onClick={() => setMallType('korean')} className="text-white">
-                  국내도서
-                </button>
+                <button className="text-white">국내도서</button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Dynamic Actions" items={koreanGenres}>
                 {(genre) => (
@@ -76,12 +73,10 @@ export default function Header() {
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
-          <NavbarItem isActive={mallType === 'foreign'}>
+          <NavbarItem>
             <Dropdown>
               <DropdownTrigger>
-                <button onClick={() => setMallType('foreign')} className="text-white">
-                  외국도서
-                </button>
+                <button className="text-white">외국도서</button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Dynamic Actions" items={foreignGenres}>
                 {(genre) => (
@@ -92,12 +87,10 @@ export default function Header() {
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
-          <NavbarItem isActive={mallType === 'ebook'}>
+          <NavbarItem>
             <Dropdown>
               <DropdownTrigger>
-                <button onClick={() => setMallType('ebook')} className="text-white">
-                  eBook
-                </button>
+                <button className="text-white">eBook</button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Dynamic Actions" items={ebookGenres}>
                 {(genre) => (
