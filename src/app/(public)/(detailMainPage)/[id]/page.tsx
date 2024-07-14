@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
 const fetchAladinDetailPage = async (isbn13: string) => {
-  const apiUrl = 'https://book-in-8th';
+  const apiUrl = 'https://book-in-8th.vercel.app/';
   const response = await fetch(`${apiUrl}/api/AladinApi/${isbn13}`);
 
   if (!response.ok) {
