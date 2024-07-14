@@ -106,7 +106,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           {isPending
             ? Array.from({ length: 40 }).map((_, index) => <SkeletonItem key={index} />)
             : data?.item.map((item) => (
-                <Link key={item.isbn13} href={`http://localhost:3000/${item.isbn13}`}>
+                <Link key={item.isbn13} href={`https://book-in-8th/${item.isbn13}`}>
                   <CategoryItem key={item.itemId} item={item} isForeign={genreData === foreignGenres} />
                 </Link>
               ))}
