@@ -7,7 +7,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
 import { useRouter } from 'next/navigation';
 import { UserInfoType } from '@/types/userInfo.type';
-import { logout } from '@/app/logout/actions';
 import { Spinner } from '@nextui-org/react';
 import CommentList from './commentlist';
 import UserInfo from './userInfo';
@@ -107,6 +106,11 @@ const Mypage = (): React.JSX.Element => {
     },
     [supabase, updateAvatarImg]
   );
+  const handleLogout = useCallback(async () => {
+    await supabase.auth.signOut();
+    toast.success('로그아웃 되었습니다.');
+    router.push('/');
+  }, [router, supabase.auth]);
 
   const taps = [
     { label: '회원정보', content: userInfo ? <UserInfo userInfo={userInfo} /> : null },
@@ -174,7 +178,7 @@ const Mypage = (): React.JSX.Element => {
               ))}
             </ul>
           </nav>
-          <form action={logout}>
+          <form action={handleLogout}>
             <button className="text-base text-[#af5858] font-bold text-center mt-[30px] w-[80px] h-[30px] rounded-full  bg-white">
               로그아웃
             </button>

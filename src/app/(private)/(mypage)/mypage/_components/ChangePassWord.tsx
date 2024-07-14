@@ -76,7 +76,7 @@ const ChangePassWord = (): React.JSX.Element => {
         console.error('DB에 비밀번호 갱신 요청 시 예상 치 못한 Error발생 했습니다.');
       }
     },
-    [changePassWord, supabase]
+    [changePassWord, supabase, passwordRegex]
   );
 
   return (
