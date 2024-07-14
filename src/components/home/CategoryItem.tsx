@@ -3,17 +3,23 @@ import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
 
 interface CategoryItemProps {
   item: Item;
+  isForeign?: boolean | undefined;
 }
 
-function truncateText(text: string, maxLength: number): string {
+const truncateText = (isForeign: boolean | undefined, text: string, maxLength: number): string => {
   if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength) + '...';
-}
+  const newText: string = text.substring(0, maxLength);
+  if (isForeign) {
+    const englishCharCount: number = (newText.match(/[a-zA-Z]/g) || []).length;
+    if (englishCharCount > 10) return newText + text.substring(maxLength, maxLength + 8) + '...';
+    else return newText + '...';
+  } else return newText + '...';
+};
 
-export default function CategoryItem({ item }: CategoryItemProps) {
-  const truncatedDescription: string = truncateText(item.description, 100);
-  const truncatedTitle: string = truncateText(item.title, 18);
-  const truncatedAuthor: string = truncateText(item.author, 16);
+export default function CategoryItem({ item, isForeign }: CategoryItemProps) {
+  const truncatedTitle: string = truncateText(isForeign, item.title, 18);
+  const truncatedDescription: string = truncateText(isForeign, item.description, 100);
+  const truncatedAuthor: string = truncateText(isForeign, item.author, 16);
 
   return (
     <Card shadow="sm" isPressable className="h-[500px]">
