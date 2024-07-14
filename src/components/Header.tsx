@@ -25,13 +25,14 @@ export default function Header() {
   const supabase = createClient();
   const router = useRouter();
 
-  // 초기 상태를 로컬 스토리지의 값으로 설정
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(() => {
-    const savedLoggedInStatus = localStorage.getItem('isLoggedIn');
-    return savedLoggedInStatus === 'true';
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // 초기값을 null로 설정하여 로딩 상태를 구분
 
   useEffect(() => {
+    const savedLoggedInStatus = localStorage.getItem('isLoggedIn');
+    if (savedLoggedInStatus !== null) {
+      setIsLoggedIn(savedLoggedInStatus === 'true');
+    }
+
     const checkSession = async () => {
       const {
         data: { session }
@@ -60,6 +61,10 @@ export default function Header() {
     setIsLoggedIn(false);
     router.push('/');
   };
+
+  if (isLoggedIn === null) {
+    return null; // 로딩 중일 때 아무것도 렌더링하지 않음
+  }
 
   return (
     <header>
@@ -138,35 +143,31 @@ export default function Header() {
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent justify="end" className="mr-[100px]">
-          {isLoggedIn !== null && (
+          {isLoggedIn ? (
             <>
-              {isLoggedIn ? (
-                <>
-                  <NavbarItem>
-                    <Link href="/mypage">
-                      <Button className="bg-white text-black font-semibold">마이페이지</Button>
-                    </Link>
-                  </NavbarItem>
-                  <NavbarItem>
-                    <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
-                      로그아웃
-                    </Button>
-                  </NavbarItem>
-                </>
-              ) : (
-                <>
-                  <NavbarItem>
-                    <Link href="/login">
-                      <Button className="bg-white text-black font-semibold">로그인</Button>
-                    </Link>
-                  </NavbarItem>
-                  <NavbarItem>
-                    <Link href="/terms">
-                      <Button className="bg-black text-white font-semibold">회원가입</Button>
-                    </Link>
-                  </NavbarItem>
-                </>
-              )}
+              <NavbarItem>
+                <Link href="/mypage">
+                  <Button className="bg-white text-black font-semibold">마이페이지</Button>
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
+                  로그아웃
+                </Button>
+              </NavbarItem>
+            </>
+          ) : (
+            <>
+              <NavbarItem>
+                <Link href="/login">
+                  <Button className="bg-white text-black font-semibold">로그인</Button>
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link href="/terms">
+                  <Button className="bg-black text-white font-semibold">회원가입</Button>
+                </Link>
+              </NavbarItem>
             </>
           )}
         </NavbarContent>
