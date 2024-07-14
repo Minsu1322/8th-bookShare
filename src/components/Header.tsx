@@ -43,7 +43,7 @@ export default function Header() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase.auth]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

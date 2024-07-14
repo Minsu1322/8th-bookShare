@@ -95,7 +95,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             key={tab.id}
             role="tab"
             onClick={() => handleTabClick(tab.id)}
-            className={clsx('block hover:font-bold', tab.id == selectedTab && 'font-bold')}
+            className={clsx('block hover:font-bold', tab.id == Number(selectedTab) && 'font-bold')}
           >
             {tab.label}
           </button>

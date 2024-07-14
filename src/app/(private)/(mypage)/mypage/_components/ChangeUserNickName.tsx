@@ -50,7 +50,7 @@ const ChangeUserNickName = ({ info }: { info: string }): React.JSX.Element => {
         position: 'top-right'
       });
     }
-  }, [changeInfoRef, info]);
+  }, [changeInfoRef, supabase]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     changeInfoRef.current = e.target.value;
