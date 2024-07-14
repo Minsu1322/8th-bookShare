@@ -26,19 +26,23 @@ export default function Header() {
   const supabase = createClient();
   const router = useRouter();
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // 초기값을 null로 설정하여 로딩 상태를 구분
 
   useEffect(() => {
-    const session = supabase.auth.getSession(); // 사용자가 로그인되어 있는지 여부를 확인
-    setIsLoggedIn(session !== null);
+    const checkSession = async () => {
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+      setIsLoggedIn(session !== null);
+    };
+    checkSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      // 사용자가 로그인하거나 로그아웃할 때마다 호출되며, 콜백 함수를 통해 이벤트와 사용자 세션 정보를 전달받는다. 일반적으로 로그인 상태 변화에 따라 UI를 업데이트하거나 특정 작업을 수행하는 데 사용
       setIsLoggedIn(session !== null);
     });
 
     return () => {
-      authListener.subscription.unsubscribe(); // 사용자의 인증 상태 변화를 실시간으로 감지
+      authListener.subscription.unsubscribe();
     };
   }, []);
 
@@ -47,6 +51,10 @@ export default function Header() {
     toast.success('로그아웃 되었습니다.');
     router.push('/');
   };
+
+  if (isLoggedIn === null) {
+    return <div>Loading</div>; // 로딩 중일 때 표시할 컴포넌트
+  }
 
   return (
     <header>
