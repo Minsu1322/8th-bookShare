@@ -137,20 +137,7 @@ export default function Header() {
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent justify="end">
-          {isLoggedIn ? (
-            <>
-              <NavbarItem>
-                <Link href="/mypage">
-                  <Button className="bg-white text-black font-semibold">마이페이지</Button>
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
-                  로그아웃
-                </Button>
-              </NavbarItem>
-            </>
-          ) : (
+          {!isLoggedIn ? (
             <>
               <NavbarItem>
                 <Link href="/login">
@@ -161,6 +148,19 @@ export default function Header() {
                 <Link href="/terms">
                   <Button className="bg-black text-white font-semibold">회원가입</Button>
                 </Link>
+              </NavbarItem>
+            </>
+          ) : (
+            <>
+              <NavbarItem>
+                <Link href="/mypage">
+                  <Button className="bg-white text-black font-semibold">마이페이지</Button>
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
+                  로그아웃
+                </Button>
               </NavbarItem>
             </>
           )}

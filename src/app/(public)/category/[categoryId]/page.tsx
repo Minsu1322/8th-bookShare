@@ -8,7 +8,6 @@ import { Genre } from '@/types/genre.type';
 import { button, Card, CardBody, Navbar, NavbarContent, NavbarItem, Pagination, Tab, Tabs } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { Key, useEffect, useState } from 'react';
-import CategoryTabs from './CategoryTabs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -100,7 +99,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           {isPending
             ? Array.from({ length: 50 }).map((_, index) => <SkeletonItem key={index} />)
             : data?.item.map((item) => (
-                <Link key={item.isbn13} href={`http://localhost:3000/${item.isbn13}`}>
+                <Link key={item.isbn13} href={`https://book-in-8th/${item.isbn13}`}>
                   <CategoryItem key={item.itemId} item={item} />
                 </Link>
               ))}

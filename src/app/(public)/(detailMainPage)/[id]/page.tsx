@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
 const fetchAladinDetailPage = async (isbn13: string) => {
-  const apiUrl = 'http://localhost:3000';
+  const apiUrl = 'https://book-in-8th';
   const response = await fetch(`${apiUrl}/api/AladinApi/${isbn13}`);
 
   if (!response.ok) {
@@ -36,7 +36,7 @@ const MainDetail = ({ params }: { params: { id: string } }) => {
   console.log(items);
   return (
     <>
-      <div className="container mx-auto p-4">
+      <div className="w-[1280] container mx-auto">
         <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg p-8">
           {/* 좌측 책 표지 이미지 */}
           <div className="md:w-1/3 flex justify-center items-center mb-6 md:mb-0">
