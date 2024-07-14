@@ -1,23 +1,26 @@
 import { Tables } from '@/types/supabase';
 import { useQuery } from '@tanstack/react-query';
-import Error from 'next/error';
 
-interface Props {
+interface CommentQueryParams {
   postId: string;
 }
-const useCommentQuery = ({ postId }: Props) => {
-  const { data: comments, isPending: commentsIsPending } = useQuery<Tables<'comments'>[], Error, Tables<'comments'>[]>({
-    queryKey: ['comments', postId],
-    queryFn: async () => {
-      const response = await fetch(`/api/comment?post_id=${postId}`, {
-        method: 'GET'
-      });
-      const data = await response.json();
+const fetchComments = async (postId: string) => {
+  const response = await fetch(`/api/comment?post_id=${postId}`);
+  const data = await response.json();
+  return data;
+};
 
-      return data;
-    }
+const useCommentQuery = ({ postId }: CommentQueryParams) => {
+  const {
+    data: comments,
+    isPending,
+    error
+  } = useQuery<Tables<'comments'>[], Error, Tables<'comments'>[]>({
+    queryKey: ['comments', postId],
+    queryFn: () => fetchComments(postId)
   });
-  return { comments, commentsIsPending };
+
+  return { comments, isPending, error };
 };
 
 export default useCommentQuery;

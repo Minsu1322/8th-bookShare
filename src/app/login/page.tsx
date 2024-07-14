@@ -11,24 +11,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  // const handleKakaoSignIn = async () => {
-  //   const supabase = createClient();
-  //   const { error } = await supabase.auth.signInWithOAuth({
-  //     provider: 'kakao',
-  //     options: {
-  //       queryParams: { access_type: 'offline', prompt: 'select_account' },
-  //       redirectTo: `http://localhost:3000/api/auth/callback`
-  //     }
-  //   });
-  //   if (error) {
-  //     console.error('Kakao Sign In Error:', error.message);
-  //     toast.error('카카오 로그인에 실패했습니다.');
-  //   } else {
-  //     toast.success('카카오 로그인에 성공했습니다.');
-  //     router.push('/');
-  //   }
-  // };
-
   const handleLogin = async (e: React.FormEvent<HTMLButtonElement>) => {
     const supabase = createClient();
     e.preventDefault();
@@ -129,12 +111,6 @@ export default function LoginPage() {
               회원가입
             </button>
           </a>
-          {/* <button
-            onClick={handleKakaoSignIn}
-            className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 mt-4"
-          >
-            카카오로 로그인
-          </button> */}
         </form>
       </div>
     </div>

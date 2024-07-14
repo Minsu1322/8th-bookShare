@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   if (queryType === 'ItemEditorChoice') {
     const categoryId = searchParams.get('CategoryId');
-    API_URL = `http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=${TTB_KEY}&QueryType=${queryType}&SearchTarget=Book&Start=${page}&MaxResults=50&CategoryId=${categoryId}&Cover=Big&Output=js&Version=20131101`;
+    API_URL = `http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=${TTB_KEY}&QueryType=${queryType}&SearchTarget=Book&Start=${page}&MaxResults=40&CategoryId=${categoryId}&Cover=Big&Output=js&Version=20131101`;
   }
 
   try {

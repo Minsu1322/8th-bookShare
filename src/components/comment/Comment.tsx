@@ -17,20 +17,12 @@ export type TargetValue = {
   post_id?: string | string[];
   writer?: string;
   created_at?: string;
+  user_id?: string;
 };
 
 const Comment = () => {
   const { id: postId } = useParams();
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [targetValue, setTargetValue] = useState<TargetValue>({
-    id: '',
-    title: '',
-    content: '',
-    post_id: postId,
-    writer: 'fake_nickname',
-    created_at: ''
-  });
-
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -38,7 +30,7 @@ const Comment = () => {
       const supabase = createClient();
       const { data, error } = await supabase.auth.getUser();
       if (error || !data?.user) {
-        console.log('no user');
+        setIsLoading(false);
       } else {
         setUser(data.user);
         setIsLoading(false);
@@ -46,8 +38,15 @@ const Comment = () => {
     }
     getUser();
   }, []);
-
-  console.log({ user });
+  const [targetValue, setTargetValue] = useState<TargetValue>({
+    id: '',
+    title: '',
+    content: '',
+    post_id: postId,
+    writer: 'fake_nickname',
+    created_at: '',
+    user_id: user?.id
+  });
 
   if (isLoading) {
     return (
@@ -65,7 +64,7 @@ const Comment = () => {
         setIsEdit={setIsEdit}
         targetValue={targetValue}
         setTargetValue={setTargetValue}
-        comment={isEdit ? targetValue : undefined}
+        // comment={isEdit ? targetValue : undefined}
         user={user}
       />
     </div>

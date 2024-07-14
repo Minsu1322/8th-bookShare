@@ -43,6 +43,7 @@ export type Database = {
       };
       users: {
         Row: {
+<<<<<<< HEAD
           avatar: string;
           created_at: string;
           email: string;
@@ -63,6 +64,28 @@ export type Database = {
           id?: string;
           nickname?: string;
         };
+=======
+          avatar: string
+          created_at: string
+          email: string
+          id: string
+          nickname: string
+        }
+        Insert: {
+          avatar?: string
+          created_at?: string
+          email: string
+          id?: string
+          nickname: string
+        }
+        Update: {
+          avatar?: string
+          created_at?: string
+          email?: string
+          id?: string
+          nickname?: string
+        }
+>>>>>>> 6621ef86c3f71ad29739b16d38001da359c36e96
         Relationships: [
           {
             foreignKeyName: 'users_id_fkey';
@@ -80,11 +103,19 @@ export type Database = {
     Functions: {
       delete_user: {
         Args: {
+<<<<<<< HEAD
           user_id: string;
         };
         Returns: undefined;
       };
     };
+=======
+          user_id: string
+        }
+        Returns: undefined
+      }
+    }
+>>>>>>> 6621ef86c3f71ad29739b16d38001da359c36e96
     Enums: {
       [_ in never]: never;
     };

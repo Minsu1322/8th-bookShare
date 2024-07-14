@@ -21,9 +21,8 @@ export default function Category() {
     queryFn: async ({ queryKey }) => {
       const queryType = queryKey[1];
       const page = queryKey[2];
-      console.log(queryType, page);
 
-      const response = await fetch(`/api/AladinApi?QueryType=${queryType}&page=${page}`);
+      const response: Response = await fetch(`/api/AladinApi?QueryType=${queryType}&page=${page}`);
       const data: Book = await response.json();
       const item: Item[] = data.item;
 
@@ -93,12 +92,6 @@ export default function Category() {
                 <CategoryItem key={item.itemId} item={item} />
               </Link>
             ))}
-        {/* {Array.from({ length: 10 }).map((_, index) => (
-          <SkeletonItem key={index} />
-        ))}
-        {bookItem?.map((item) => (
-          <CategoryItem key={item.itemId} item={item} />
-        ))} */}
       </div>
       <div className="mt-6 flex justify-center">
         <Pagination

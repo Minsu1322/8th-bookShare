@@ -7,9 +7,12 @@ import dynamic from 'next/dynamic';
 import { useParams, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
 import 'react-quill/dist/quill.snow.css';
+import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 import { TargetValue } from './Comment';
 
 type SubmitItem = Pick<Tables<'comments'>, 'id' | 'title' | 'content' | 'post_id' | 'writer'>;
+
 interface Props {
   isEdit: boolean;
   setIsEdit: Dispatch<SetStateAction<boolean>>;
@@ -21,7 +24,7 @@ interface Props {
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, comment, user }: Props) => {
+const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, user }: Props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id: postId } = useParams<{ id: string }>();
@@ -29,20 +32,20 @@ const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, comment, 
   const handleChange = (value: string) => {
     if (!user) {
       if (confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
-        router.prefetch('login');
+        return router.push('/login');
       } else return;
     }
     if (value.length <= 200) {
       setTargetValue((prev) => ({ ...prev, content: value }));
     } else {
-      alert('230자 이상은 작성 불가능합니다');
+      toast.error('230자 이상은 작성 불가능합니다');
     }
   };
 
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!user) {
       if (confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
-        router.prefetch('login');
+        return router.push('/login');
       } else return;
     }
     setTargetValue((prev) => ({ ...prev, title: e.target.value }));
@@ -74,26 +77,48 @@ const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, comment, 
 
   const addMutation = useMutation({
     mutationFn: addComment,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+    onMutate: async (newComment) => {
+      await queryClient.cancelQueries({ queryKey: ['comments', postId] });
+
+      const previousComments = queryClient.getQueryData(['comments', postId]);
+
+      queryClient.setQueryData(['comments', postId], (old: any) => [...(old || []), { ...newComment, id: uuidv4() }]);
+
       setTargetValue({ title: '', content: '' });
-      alert('댓글 작성 완료');
+      return { previousComments };
     },
-    onError: () => {
-      alert('댓글 작성 중 오류가 발생했습니다.');
+    onError: (err, newComment, context) => {
+      queryClient.setQueryData(['comments', postId], context?.previousComments);
+      toast.error('작성중 오류 발생. 잠시 후 다시 시도해주세요');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      toast.success('작성 완료');
     }
   });
 
   const updateMutation = useMutation({
     mutationFn: updateComment,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+    onMutate: async (updatedComment) => {
+      await queryClient.cancelQueries({ queryKey: ['comments', postId] });
+
+      const previousComments = queryClient.getQueryData(['comments', postId]);
+
+      queryClient.setQueryData(['comments', postId], (old: any) =>
+        old.map((comment: any) => (comment.id === updatedComment.id ? updatedComment : comment))
+      );
+
       setIsEdit(false);
-      setTargetValue((prev) => ({ ...prev, title: '', content: '' }));
-      alert('댓글 수정 완료');
+      setTargetValue({ title: '', content: '' });
+      return { previousComments };
     },
-    onError: () => {
-      alert('댓글 수정 중 오류가 발생했습니다.');
+    onError: (err, updatedComment, context) => {
+      queryClient.setQueryData(['comments', postId], context?.previousComments);
+      toast.error('댓글 수정 중 오류가 발생했습니다.');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      toast.success('수정 완료');
     }
   });
 
@@ -143,7 +168,7 @@ const CommentForm = ({ isEdit, setIsEdit, targetValue, setTargetValue, comment, 
           {isEdit ? '수정' : '업로드'}
         </button>
         {isEdit && (
-          <button className="bg-gray-500 px-4 py-1 rounded-md" type="button" onClick={handleCancel}>
+          <button className="bg-gray-500 px-4 py-1 rounded-md text-white" type="button" onClick={handleCancel}>
             취소
           </button>
         )}

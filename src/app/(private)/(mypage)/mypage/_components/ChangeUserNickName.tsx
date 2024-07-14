@@ -1,23 +1,22 @@
 'use client';
 import Button from '@/components/ButtonComponent';
 import { createClient } from '@/utils/supabase/client';
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const ChangeUserNickName = ({ info }: { info: string }) => {
+const ChangeUserNickName = ({ info }: { info: string }): React.JSX.Element => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [changeInfo, setChangeInfo] = useState<string>(info); //초기값을 설정해야됨 props로
+  const changeInfoRef = useRef<string>(info);
   const supabase = createClient();
 
   const handleEdit = (): void => {
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
+  const handleSaveNickname = useCallback(async (): Promise<void> => {
     setIsEditing(false);
-
+    const changeInfo = changeInfoRef.current; 
     if (changeInfo.trim() === '') {
-      setChangeInfo(info);
       toast.warning(`빈칸으로 변경할 수 없습니다.`, {
         position: 'top-right'
       });
@@ -51,9 +50,10 @@ const ChangeUserNickName = ({ info }: { info: string }) => {
         position: 'top-right'
       });
     }
-  };
+  }, [changeInfoRef, supabase]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setChangeInfo(e.target.value);
+    changeInfoRef.current = e.target.value;
   };
 
   return (
@@ -61,13 +61,13 @@ const ChangeUserNickName = ({ info }: { info: string }) => {
       {isEditing ? (
         <input
           type="text"
-          value={changeInfo}
+          placeholder={changeInfoRef.current}
           className="text-base outline-double pl-2 py-1 rounded block box-border"
           onChange={handleChange}
-          maxLength={25}
+          maxLength={8}
         />
       ) : (
-        <p className="text-base">{changeInfo}</p>
+        <p className="text-base">{changeInfoRef.current}</p>
       )}
       <div>
         {isEditing && (
@@ -84,7 +84,7 @@ const ChangeUserNickName = ({ info }: { info: string }) => {
           style={
             'bg-[#af5858] text-white w-[60px] h-[30px] rounded-full text-xs font-bold hover:bg-opacity-80 transition'
           }
-          onClick={isEditing ? handleSave : handleEdit}
+          onClick={isEditing ? handleSaveNickname : handleEdit}
         />
       </div>
     </div>

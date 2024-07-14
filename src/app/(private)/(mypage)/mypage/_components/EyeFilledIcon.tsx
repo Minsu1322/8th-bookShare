@@ -1,4 +1,4 @@
-export const EyeFilledIcon = (props: React.SVGProps<SVGSVGElement>) => (
+export const EyeFilledIcon = (props: React.SVGProps<SVGSVGElement>): JSX.Element => (
   <svg
     aria-hidden="true"
     fill="none"

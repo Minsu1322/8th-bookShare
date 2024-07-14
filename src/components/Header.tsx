@@ -20,27 +20,30 @@ import {
 } from '@nextui-org/react';
 
 export default function Header() {
-  const [mallType, setMallType] = useState<string | null>(null);
   const { koreanGenres, foreignGenres, ebookGenres } = useGenres();
 
   const supabase = createClient();
   const router = useRouter();
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // 초기값을 null로 설정하여 로딩 상태를 구분
 
   useEffect(() => {
-    const session = supabase.auth.getSession(); // 사용자가 로그인되어 있는지 여부를 확인
-    setIsLoggedIn(session !== null);
+    const checkSession = async () => {
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+      setIsLoggedIn(session !== null);
+    };
+    checkSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      // 사용자가 로그인하거나 로그아웃할 때마다 호출되며, 콜백 함수를 통해 이벤트와 사용자 세션 정보를 전달받는다. 일반적으로 로그인 상태 변화에 따라 UI를 업데이트하거나 특정 작업을 수행하는 데 사용
       setIsLoggedIn(session !== null);
     });
 
     return () => {
-      authListener.subscription.unsubscribe(); // 사용자의 인증 상태 변화를 실시간으로 감지
+      authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase.auth]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -51,13 +54,11 @@ export default function Header() {
   return (
     <header>
       <Navbar maxWidth="full" className="bg-main">
-        <NavbarContent className="hidden sm:flex gap-6 font-bold" justify="start">
-          <NavbarItem isActive={mallType === 'korean'}>
+        <NavbarContent className="hidden sm:flex gap-6 font-bold ml-[100px]" justify="start">
+          <NavbarItem>
             <Dropdown>
               <DropdownTrigger>
-                <button onClick={() => setMallType('korean')} className="text-white">
-                  국내도서
-                </button>
+                <button className="text-white">국내도서</button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Dynamic Actions" items={koreanGenres}>
                 {(genre) => (
@@ -68,12 +69,10 @@ export default function Header() {
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
-          <NavbarItem isActive={mallType === 'foreign'}>
+          <NavbarItem>
             <Dropdown>
               <DropdownTrigger>
-                <button onClick={() => setMallType('foreign')} className="text-white">
-                  외국도서
-                </button>
+                <button className="text-white">외국도서</button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Dynamic Actions" items={foreignGenres}>
                 {(genre) => (
@@ -84,12 +83,10 @@ export default function Header() {
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
-          <NavbarItem isActive={mallType === 'ebook'}>
+          <NavbarItem>
             <Dropdown>
               <DropdownTrigger>
-                <button onClick={() => setMallType('ebook')} className="text-white">
-                  eBook
-                </button>
+                <button className="text-white">eBook</button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Dynamic Actions" items={ebookGenres}>
                 {(genre) => (
@@ -99,12 +96,6 @@ export default function Header() {
                 )}
               </DropdownMenu>
             </Dropdown>
-          </NavbarItem>
-          <NavbarItem>
-            <button className="text-white">책In Only</button>
-          </NavbarItem>
-          <NavbarItem>
-            <button className="text-white">커뮤니티</button>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="center">
@@ -136,6 +127,7 @@ export default function Header() {
             </Link>
           </NavbarBrand>
         </NavbarContent>
+<<<<<<< HEAD
         <NavbarContent justify="end">
           {!isLoggedIn ? (
             <>
@@ -162,6 +154,38 @@ export default function Header() {
                   로그아웃
                 </Button>
               </NavbarItem>
+=======
+        <NavbarContent justify="end" className="mr-[100px]">
+          {isLoggedIn !== null && (
+            <>
+              {isLoggedIn ? (
+                <>
+                  <NavbarItem>
+                    <Link href="/mypage">
+                      <Button className="bg-white text-black font-semibold">마이페이지</Button>
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
+                      로그아웃
+                    </Button>
+                  </NavbarItem>
+                </>
+              ) : (
+                <>
+                  <NavbarItem>
+                    <Link href="/login">
+                      <Button className="bg-white text-black font-semibold">로그인</Button>
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Link href="/terms">
+                      <Button className="bg-black text-white font-semibold">회원가입</Button>
+                    </Link>
+                  </NavbarItem>
+                </>
+              )}
+>>>>>>> 6621ef86c3f71ad29739b16d38001da359c36e96
             </>
           )}
         </NavbarContent>

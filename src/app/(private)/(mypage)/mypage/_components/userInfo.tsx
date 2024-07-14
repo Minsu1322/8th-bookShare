@@ -1,15 +1,11 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
-import ButtonComponent from '@/components/ButtonComponent';
 import { UserInfoPropsType } from '@/types/userInfo.type';
 import ChangePassWord from './ChangePassWord';
 import ChangeUserId from './ChangeUserId';
 import ChangeUserNickName from './ChangeUserNickName';
-import { createClient } from '@/utils/supabase/client';
-import { logout } from '@/app/logout/actions';
-import { AuthError } from '@supabase/supabase-js';
 import AccountDeletion from './AccountDeletion';
 
-const UserInfo = ({ userInfo }: UserInfoPropsType) => {
+const UserInfo = ({ userInfo }: UserInfoPropsType): JSX.Element => {
   return (
     <Table isStriped aria-label="Example static collection table">
       <TableHeader>
@@ -42,7 +38,7 @@ const UserInfo = ({ userInfo }: UserInfoPropsType) => {
         <TableRow key="5" className="h-20">
           <TableCell className="text-center text-lg font-bold">회원탈퇴</TableCell>
           <TableCell>
-            <AccountDeletion userInfo={userInfo.id}/>
+            <AccountDeletion userInfo={userInfo.id} />
           </TableCell>
         </TableRow>
       </TableBody>
