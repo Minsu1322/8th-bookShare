@@ -127,34 +127,6 @@ export default function Header() {
             </Link>
           </NavbarBrand>
         </NavbarContent>
-<<<<<<< HEAD
-        <NavbarContent justify="end">
-          {!isLoggedIn ? (
-            <>
-              <NavbarItem>
-                <Link href="/login">
-                  <Button className="bg-white text-black font-semibold">로그인</Button>
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Link href="/terms">
-                  <Button className="bg-black text-white font-semibold">회원가입</Button>
-                </Link>
-              </NavbarItem>
-            </>
-          ) : (
-            <>
-              <NavbarItem>
-                <Link href="/mypage">
-                  <Button className="bg-white text-black font-semibold">마이페이지</Button>
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Button className="bg-black text-white font-semibold" onClick={handleLogout}>
-                  로그아웃
-                </Button>
-              </NavbarItem>
-=======
         <NavbarContent justify="end" className="mr-[100px]">
           {isLoggedIn !== null && (
             <>
@@ -185,7 +157,6 @@ export default function Header() {
                   </NavbarItem>
                 </>
               )}
->>>>>>> 6621ef86c3f71ad29739b16d38001da359c36e96
             </>
           )}
         </NavbarContent>
