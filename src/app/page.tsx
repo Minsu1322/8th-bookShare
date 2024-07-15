@@ -1,5 +1,11 @@
-import Image from 'next/image';
+import Category from '@/components/home/Category';
+import { logout } from './logout/actions';
+import DemoClientComponent from '@/components/DemoClientComponent';
 
 export default function Home() {
-  return <div>dd</div>;
+  return (
+    <main>
+      <Category />
+    </main>
+  );
 }
