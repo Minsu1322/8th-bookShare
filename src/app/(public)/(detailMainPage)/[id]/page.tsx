@@ -84,7 +84,7 @@ const MainDetail = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
       </div>
-      <Comment />
+      {/* <Comment /> */}
     </>
   );
 };
