@@ -76,13 +76,6 @@ export default function Category() {
             </button>
           </NavbarItem>
         </NavbarContent>
-        <NavbarContent justify="end">
-          <input
-            type="text"
-            placeholder="검색어를 입력하세요"
-            className="border border-gray-300 rounded-md p-1 text-xs w-56"
-          />
-        </NavbarContent>
       </Navbar>
       <div className="gap-3 grid grid-cols-2 sm:grid-cols-5">
         {isPending
